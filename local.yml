@@ -1,0 +1,36 @@
+---
+- hosts: local
+  become: yes
+  vars:
+    user_name: "kayos"
+
+  tasks:
+    - name: "System | Update Apt Cache"
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: "System | Install Base Packages"
+      apt:
+        name:
+          - build-essential
+          - curl
+          - git
+        state: latest
+
+    - name: "Mise | Install Mise"
+      apt:
+        name: mise
+        state: present
+
+    - name: "Chezmoi | Install Chezmoi"
+      apt:
+        name: chezmoi
+        state: present
+
+    - name: "User | Ensure User Exists"
+      user:
+        name: "{{ user_name }}"
+        shell: /usr/bin/zsh
+        groups: sudo,plugdev,input,video,dialout
+        append: yes
