@@ -1,0 +1,7 @@
+# SPDX-License-Identifier: MIT-0
+---
+- name: Test 3d-printing role
+  hosts: localhost
+  remote_user: root
+  roles:
+    - 3d-printing

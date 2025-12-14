@@ -1,0 +1,7 @@
+roles_to_run:
+  - 3d-printing
+  - amateur-radio
+  - meshtastic
+  - reform
+  - sdr
+sdr_release_override: sid

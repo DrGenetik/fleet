@@ -1,2 +1,12 @@
 [local]
 localhost ansible_connection=local
+
+[laptop]
+rincewind
+
+[workstation]
+jareth
+constantine
+
+[server]
+minecraft

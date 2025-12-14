@@ -1,0 +1,35 @@
+[tools]
+"npm:markdownlint-cli" = "latest"
+"pipx:ansible-lint" = "latest"
+"1password-cli" = "latest"
+
+[tasks.apply-local]
+description = "Apply configuration to the current host locally"
+run = "ansible-playbook local.yml -l \"$(hostname)\" -c local -b --become-method=sudo --ask-become-pass"
+
+[tasks.dry-run-local]
+description = "Dry run (check mode) configuration on the current host locally with diffs"
+run = "ansible-playbook local.yml -l \"$(hostname)\" -c local -b --become-method=sudo --ask-become-pass --check --diff"
+
+[tasks.lint]
+description = "Run linters (ansible-lint, markdownlint)"
+depends = ["lint:ansible", "lint:markdown"]
+
+[tasks."lint:ansible"]
+run = "ansible-lint"
+
+[tasks."lint:markdown"]
+run = "markdownlint ."
+
+[tasks."secrets:view"]
+description = "View vaulted secrets"
+run = "ansible-vault view group_vars/all/secrets.yml"
+
+[tasks."secrets:edit"]
+description = "Edit vaulted secrets"
+run = "ansible-vault edit group_vars/all/secrets.yml"
+
+[tasks."secrets:rekey"]
+description = "Rekey the vault with a new password"
+run = "ansible-vault rekey group_vars/all/secrets.yml"
+

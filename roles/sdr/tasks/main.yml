@@ -1,0 +1,57 @@
+# SPDX-License-Identifier: MIT-0
+---
+# tasks file for sdr
+
+- name: "SDR | Blacklist DVB kernel modules for RTL-SDR"
+  ansible.builtin.copy:
+    dest: /etc/modprobe.d/blacklist-dvb.conf
+    content: |
+      blacklist dvb_usb_rtl28xxu
+    mode: "0644"
+    owner: root
+    group: root
+  become: true
+
+- name: "Install Debian hamradio-sdr metapackage"
+  ansible.builtin.apt:
+    name:
+      - hamradio-sdr
+    install_recommends: true
+    state: present
+  become: true
+
+- name: "SDR++ | Find latest nightly release"
+  ansible.builtin.uri:
+    url: "https://api.github.com/repos/AlexandreRouma/SDRPlusPlus/releases/tags/nightly"
+    method: GET
+    return_content: true
+    headers:
+      Accept: "application/vnd.github.v3+json"
+  register: sdr_release_info
+  check_mode: false
+
+- name: "SDR++ | Set download URL fact"
+  ansible.builtin.set_fact:
+    sdr_sdrplusplus_url: >-
+      {{
+        (sdr_release_info.json.assets |
+        selectattr('name', 'equalto', 'sdrpp_debian_' +
+        (sdr_release_override | default(ansible_facts['distribution_release'])) +
+        '_' + ansible_facts['architecture'] + '.deb') | first).browser_download_url
+      }}
+  when: sdr_release_info.status == 200
+
+- name: "SDR++ | Download Debian package"
+  ansible.builtin.get_url:
+    url: "{{ sdr_sdrplusplus_url }}"
+    dest: "/tmp/sdrplusplus.deb"
+    mode: "0644"
+  when: sdr_sdrplusplus_url is defined
+  check_mode: false
+
+- name: "SDR++ | Install Debian package"
+  ansible.builtin.apt:
+    deb: "/tmp/sdrplusplus.deb"
+    state: present
+  become: true
+  when: sdr_sdrplusplus_url is defined

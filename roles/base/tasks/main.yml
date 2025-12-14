@@ -1,0 +1,63 @@
+# SPDX-License-Identifier: MIT-0
+---
+# tasks file for base
+
+- name: "System | Install Base Packages"
+  ansible.builtin.apt:
+    name:
+      - build-essential
+      - curl
+      - git
+      - ansible
+      - zerotier-one
+    state: present
+  become: true
+
+- name: "User | Check if already in ZeroTier network"
+  ansible.builtin.command:
+    cmd: "zerotier-cli listnetworks -j"
+  register: base_zerotier_networks
+  changed_when: false
+  become: true
+  check_mode: false
+
+- name: "User | Join ZeroTier Network"
+  ansible.builtin.command:
+    cmd: "zerotier-cli join {{ zerotier_network_id }}"
+  become: true
+  changed_when: false
+  when: "zerotier_network_id not in (base_zerotier_networks.stdout | from_json | map(attribute='nwid') | list)"
+
+- name: "User | Ensure User Exists"
+  ansible.builtin.user:
+    name: "{{ user_name }}"
+    shell: /usr/bin/zsh
+    groups: sudo,plugdev,input,video,dialout
+    append: true
+  become: true
+
+- name: "User | Install mise"
+  become: true
+  become_user: "{{ user_name }}"
+  ansible.builtin.shell: |
+    set -o pipefail
+    curl https://mise.run | sh
+  args:
+    creates: "/home/{{ user_name }}/.local/bin/mise"
+    executable: /bin/bash
+
+- name: "User | Install and configure chezmoi with mise"
+  become: true
+  become_user: "{{ user_name }}"
+  ansible.builtin.command:
+    cmd: "/home/{{ user_name }}/.local/bin/mise use --global chezmoi"
+  args:
+    creates: "/home/{{ user_name }}/.local/share/mise/installs/chezmoi"
+
+- name: "User | Init and apply dotfiles"
+  become: true
+  become_user: "{{ user_name }}"
+  ansible.builtin.command:
+    cmd: "/home/{{ user_name }}/.local/bin/mise x -- chezmoi init --apply https://github.com/genetikayos/dotfiles.git"
+  args:
+    creates: "/home/{{ user_name }}/.local/share/chezmoi"

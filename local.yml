@@ -1,36 +1,45 @@
 ---
-- hosts: local
-  become: yes
-  vars:
-    user_name: "kayos"
-
-  tasks:
-    - name: "System | Update Apt Cache"
-      apt:
-        update_cache: yes
+# tasks to complete before running roles
+- name: Pre-run Setup
+  hosts: all
+  become: true
+  pre_tasks:
+    - name: Pre-run | Update package cache (debian, etc)
+      ansible.builtin.apt:
+        update_cache: true
         cache_valid_time: 3600
+      changed_when: false
+      when: ansible_facts['os_family'] | lower == 'debian'
 
-    - name: "System | Install Base Packages"
-      apt:
-        name:
-          - build-essential
-          - curl
-          - git
-        state: latest
+# run roles
+- name: Apply base role
+  hosts: all
+  roles:
+    - base
 
-    - name: "Mise | Install Mise"
-      apt:
-        name: mise
-        state: present
+- name: Apply roles to hosts
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Include roles for each host
+      ansible.builtin.include_role:
+        name: "{{ item }}"
+      loop: "{{ roles_to_run | default([]) }}"
+      when: roles_to_run is defined
 
-    - name: "Chezmoi | Install Chezmoi"
-      apt:
-        name: chezmoi
-        state: present
+# end of run cleanup and reporting
+- name: Cleanup
+  hosts: all
+  become: true
+  tasks:
+    - name: Cleanup package cache (debian and ubuntu)
+      ansible.builtin.apt:
+        autoclean: true
+      changed_when: false
+      when: ansible_facts['os_family'] | lower == 'debian'
 
-    - name: "User | Ensure User Exists"
-      user:
-        name: "{{ user_name }}"
-        shell: /usr/bin/zsh
-        groups: sudo,plugdev,input,video,dialout
-        append: yes
+    - name: Autoremove orphan packages (debian and ubuntu)
+      ansible.builtin.apt:
+        autoremove: true
+        purge: true
+      when: ansible_facts['os_family'] | lower == 'debian'
