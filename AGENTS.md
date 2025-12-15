@@ -8,6 +8,8 @@ This is an Ansible configuration repository for managing a fleet of personal com
 
 This project uses **[mise](https://mise.jdx.dev/)** to manage development tasks and dependencies. Prefer these commands over running `ansible-playbook` directly when possible.
 
+**CRITICAL**: All `mise` tasks that run Ansible now depend on the **1Password CLI (`op`)**. `mise` will install the tool, but you **must be logged in (`op signin`)** for the tasks to work.
+
 - **Apply configuration locally**:
 
   ```bash
@@ -54,7 +56,9 @@ If you need to bypass mise or run on remote hosts:
   - `base`: Common config (packages, user setup, `mise` installation).
   - Domain roles: `3d-printing`, `sdr`, `meshtastic`, `reform`, `amateur-radio`.
 - **`group_vars/`**:
-  - `all.yml`: Global variables (e.g., `user_name`).
+  - `all/`: Global variables.
+    - `vars.yml`: Non-sensitive global variables (e.g., `user_name`).
+    - `secrets.yml`: Vault-encrypted sensitive variables.
   - `laptop.yml`, `server.yml`, etc.: Group-specific vars.
 - **`host_vars/`**: Host-specific variables (mostly `roles_to_run`).
 - **`mise.toml`**: Task definitions and tool versions.
@@ -80,11 +84,18 @@ roles_to_run:
   - `ansible-lint`: Configured in `.ansible-lint`. Checks for best practices.
   - `markdownlint`: Configured in `.markdownlint.json`. Checks documentation.
 
+## Secret Management (Ansible Vault & 1Password)
+
+- **Encryption**: Sensitive variables are encrypted using Ansible Vault in `group_vars/all/secrets.yml`.
+- **Password Source**: The vault password is **not** stored on disk in a plaintext file. It is fetched on-demand by an executable script, `.get_vault_password.sh`.
+- **1Password CLI**: This script uses the 1Password CLI (`op`) to read the secret from the shared vault. This means all local development requires an active `op` session. `mise` is configured to automatically install the `op` tool.
+
 ## Conventions & Gotchas
 
 - **Role Naming**: Role names in this project use hyphens (e.g., `3d-printing`), which conflicts with the default `role-name` linter rule. This rule has been disabled in `.ansible-lint`.
 - **`become` Keyword**: Some tasks (like `ansible.builtin.user`) require an explicit `become: true` even if the parent play already has `become` set. This is a nuance of how Ansible applies privileges.
-- **User Variable**: The primary user is defined as `user_name` in `group_vars/all.yml` (default: `kayos`).
+- **User Variable**: The primary user is defined as `user_name` in `group_vars/all/vars.yml` (default: `kayos`).
+- **`group_vars` Precedence**: A critical Ansible behavior to be aware of: if a directory named `group_vars/all/` exists, Ansible will **ignore** a file named `group_vars/all.yml`. All variables for the `all` group must be placed in files *within* that directory. This was the root cause of an earlier `user_name is undefined` error.
 - **OS Support**: Targets **Debian/Ubuntu** (`ansible_facts['os_family']|lower == 'debian'`).
 - **Python Interpreter**: Explicitly set to `/usr/bin/python3` in `ansible.cfg` to resolve interpreter discovery warnings.
 - **YAML Output**: The deprecated `yaml` callback was replaced with `stdout_callback = default` and `result_format = yaml` in `ansible.cfg` for modern, clean YAML output.
