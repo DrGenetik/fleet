@@ -11,6 +11,12 @@
       changed_when: false
       when: ansible_facts['os_family'] | lower == 'debian'
 
+    - name: Pre-run | Update package cache (archlinux, etc)
+      community.general.pacman:
+        update_cache: true
+      changed_when: false
+      when: ansible_facts['os_family'] | lower == 'archlinux'
+
 # run roles
 - name: Apply base role
   hosts: all

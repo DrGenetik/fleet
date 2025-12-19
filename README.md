@@ -14,7 +14,7 @@ To provision a machine for the first time (or update it without cloning the repo
 For interactive bootstrapping, you can provide the vault password when prompted:
 
 ```bash
-sudo ansible-pull -U https://github.com/DrGenetik/fleet.git -i hosts local.yml -l "$(hostname)" --ask-vault-pass
+ansible-pull -U https://github.com/DrGenetik/fleet.git -i hosts local.yml -l "$(hostname)"
 ```
 
 For automated bootstrapping (e.g., via a script or cron job), you must place a vault password file on the remote machine (e.g., at `/root/.vault_password`) and reference it in the command.
@@ -42,7 +42,7 @@ You can run the `ansible-playbook` command directly. You must limit execution to
 
 ```bash
 # Run on the current host (requires sudo password)
-ansible-playbook local.yml -l "$(hostname)" -c local --ask-become-pass
+ansible-playbook local.yml -l "$(hostname)" -c local
 ```
 
 ## 3. Testing / Dry Run
@@ -59,7 +59,7 @@ mise run dry-run-local
 ### Without mise
 
 ```bash
-ansible-playbook local.yml -l "$(hostname)" -c local --ask-become-pass --check --diff
+ansible-playbook local.yml -l "$(hostname)" -c local --check --diff
 ```
 
 ## 4. Linting
