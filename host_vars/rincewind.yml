@@ -1,3 +1,9 @@
+base_user_groups:
+  - sudo
+  - plugdev
+  - input
+  - video
+  - dialout
 roles_to_run:
   - 3d-printing
   - amateur-radio

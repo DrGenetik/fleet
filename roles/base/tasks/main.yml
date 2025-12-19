@@ -2,37 +2,88 @@
 ---
 # tasks file for base
 
+# - name: Ensure the community.general collection is installed
+#   ansible.builtin.command: ansible-galaxy collection install community.general
+#   run_once: true
+#   delegate_to: localhost
+
 - name: "System | Install Base Packages"
   ansible.builtin.apt:
     name:
       - build-essential
       - curl
       - git
-      - ansible
+      - ansible-core
       - zerotier-one
     state: present
   become: true
+  when: ansible_facts['os_family'] | lower == 'debian'
 
-- name: "User | Check if already in ZeroTier network"
+- name: "System | Install Base Packages"
+  community.general.pacman:
+    name:
+      - curl
+      - git
+      - ansible-core
+      - zerotier-one
+      - net-tools
+      - openssh
+      - vim
+      - nano
+    state: present
+  become: true
+  when: ansible_facts['os_family'] | lower == 'archlinux'
+
+- name: "System | Gather list of installed packages"
+  ansible.builtin.package_facts:
+    manager: auto
+
+- name: "System | Enable and Start sshd"
+  ansible.builtin.systemd:
+    name: sshd
+    state: started
+    enabled: true
+  become: true
+  when: "'openssh' in ansible_facts.packages"
+
+- name: Allow SSH (OpenSSH profile)
+  community.general.ufw:
+    rule: limit
+    name: SSH
+  become: true
+  when: "'openssh' in ansible_facts.packages"
+
+- name: "System | Enable and Start zerotier-one"
+  ansible.builtin.systemd:
+    name: zerotier-one
+    state: started
+    enabled: true
+  become: true
+  when: "'zerotier-one' in ansible_facts.packages"
+
+- name: "System | Check if already in ZeroTier network"
   ansible.builtin.command:
     cmd: "zerotier-cli listnetworks -j"
   register: base_zerotier_networks
   changed_when: false
   become: true
   check_mode: false
+  when: "'zerotier-one' in ansible_facts.packages"
 
-- name: "User | Join ZeroTier Network"
+- name: "System | Join ZeroTier Network"
   ansible.builtin.command:
     cmd: "zerotier-cli join {{ zerotier_network_id }}"
   become: true
   changed_when: false
-  when: "zerotier_network_id not in (base_zerotier_networks.stdout | from_json | map(attribute='nwid') | list)"
+  when:
+    - "'zerotier-one' in ansible_facts.packages"
+    - "zerotier_network_id not in (base_zerotier_networks.stdout | from_json | map(attribute='nwid') | list)"
 
 - name: "User | Ensure User Exists"
   ansible.builtin.user:
     name: "{{ user_name }}"
     shell: /usr/bin/zsh
-    groups: sudo,plugdev,input,video,dialout
+    groups: "{{ base_user_groups }}"
     append: true
   become: true
 
