@@ -15,6 +15,10 @@
       - git
       - ansible-core
       - zerotier-one
+      - libnotify-bin
+      - sway-notification-center
+      - openssh-server
+      - ufw
     state: present
   become: true
   when: ansible_facts['os_family'] | lower == 'debian'
@@ -38,20 +42,30 @@
   ansible.builtin.package_facts:
     manager: auto
 
+- name: Enable uncomplicated firewall
+  community.general.ufw:
+    state: enabled
+  become: true
+  when:
+    - "'ufw' in ansible_facts.packages"
+
 - name: "System | Enable and Start sshd"
   ansible.builtin.systemd:
     name: sshd
     state: started
     enabled: true
   become: true
-  when: "'openssh' in ansible_facts.packages"
+  when:
+    - "'openssh' in ansible_facts.packages or 'openssh-server' in ansible_facts.packages"
 
 - name: Allow SSH (OpenSSH profile)
   community.general.ufw:
     rule: limit
     name: SSH
   become: true
-  when: "'openssh' in ansible_facts.packages"
+  when:
+    - "'openssh' in ansible_facts.packages or 'openssh-server' in ansible_facts.packages"
+    - "'ufw' in ansible_facts.packages"
 
 - name: "System | Enable and Start zerotier-one"
   ansible.builtin.systemd:
