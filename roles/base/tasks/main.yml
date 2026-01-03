@@ -15,10 +15,11 @@
       - git
       - ansible-core
       - zerotier-one
-      - libnotify-bin
-      - sway-notification-center
+      # - libnotify-bin
+      # - sway-notification-center
       - openssh-server
       - ufw
+      - zsh
     state: present
   become: true
   when: ansible_facts['os_family'] | lower == 'debian'
@@ -34,6 +35,7 @@
       - openssh
       - vim
       - nano
+      - zsh
     state: present
   become: true
   when: ansible_facts['os_family'] | lower == 'archlinux'
@@ -51,7 +53,7 @@
 
 - name: "System | Enable and Start sshd"
   ansible.builtin.systemd:
-    name: sshd
+    name: "{{ base_sshd_unit_name }}"
     state: started
     enabled: true
   become: true
@@ -61,7 +63,7 @@
 - name: Allow SSH (OpenSSH profile)
   community.general.ufw:
     rule: limit
-    name: SSH
+    name: "{{ base_ufw_ssh_app_profile_name }}"
   become: true
   when:
     - "'openssh' in ansible_facts.packages or 'openssh-server' in ansible_facts.packages"
@@ -74,6 +76,18 @@
     enabled: true
   become: true
   when: "'zerotier-one' in ansible_facts.packages"
+
+- name: "Allow ZeroTier UDP port for direct P2P connections"
+  community.general.ufw:
+    rule: allow
+    port: "9993"
+    proto: udp
+
+- name: "Allow all incoming traffic from the ZeroTier virtual interface"
+  community.general.ufw:
+    rule: allow
+    direction: in
+    interface: "{{ base_zerotier_interface }}"
 
 - name: "System | Check if already in ZeroTier network"
   ansible.builtin.command:
@@ -92,6 +106,14 @@
   when:
     - "'zerotier-one' in ansible_facts.packages"
     - "zerotier_network_id not in (base_zerotier_networks.stdout | from_json | map(attribute='nwid') | list)"
+
+- name: "Allow all required ports in UFW"
+  community.general.ufw:
+    rule: allow
+    port: "{{ item.port | string }}"
+    proto: "{{ item.proto }}"
+    comment: "{{ item.comment }}"
+  loop: "{{ base_firewall_rules }}"
 
 - name: "User | Ensure User Exists"
   ansible.builtin.user:
@@ -115,14 +137,16 @@
   become: true
   become_user: "{{ user_name }}"
   ansible.builtin.command:
+    chdir: "/home/{{ user_name }}"
     cmd: "/home/{{ user_name }}/.local/bin/mise use --global chezmoi"
-  args:
     creates: "/home/{{ user_name }}/.local/share/mise/installs/chezmoi"
 
-- name: "User | Init and apply dotfiles"
+- name: "User | Init dotfiles"
   become: true
   become_user: "{{ user_name }}"
   ansible.builtin.command:
-    cmd: "/home/{{ user_name }}/.local/bin/mise x -- chezmoi init --apply https://github.com/genetikayos/dotfiles.git"
-  args:
-    creates: "/home/{{ user_name }}/.local/share/chezmoi"
+    chdir: "/home/{{ user_name }}"
+    cmd: "/home/{{ user_name }}/.local/bin/mise x -- chezmoi init DrGenetik"
+    creates: "/home/{{ user_name }}/.local/share/chezmoi/.git"
+  environment:
+    GITHUB_TOKEN: "{{ github_token }}"

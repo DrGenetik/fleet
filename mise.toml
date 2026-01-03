@@ -1,5 +1,6 @@
 [tools]
 "npm:markdownlint-cli" = "latest"
+pipx = "latest"
 "pipx:ansible-lint" = "latest"
 
 [tasks.apply-local]
