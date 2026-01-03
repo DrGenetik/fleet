@@ -6,3 +6,4 @@ base_sshd_unit_name: sshd.service
 base_ufw_ssh_app_profile_name: SSH
 base_firewall_rules: []
 base_zerotier_interface: ztyouzrib2
+base_user_shell: /usr/bin/zsh

@@ -35,7 +35,7 @@
       - openssh
       - vim
       - nano
-      - zsh
+      - omarchy-zsh
     state: present
   become: true
   when: ansible_facts['os_family'] | lower == 'archlinux'
@@ -118,7 +118,7 @@
 - name: "User | Ensure User Exists"
   ansible.builtin.user:
     name: "{{ user_name }}"
-    shell: /usr/bin/zsh
+    shell: "{{ base_user_shell }}"
     groups: "{{ base_user_groups }}"
     append: true
   become: true
