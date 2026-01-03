@@ -82,12 +82,14 @@
     rule: allow
     port: "9993"
     proto: udp
+    comment: "allow ZeroTier direct P2P connections"
 
 - name: "Allow all incoming traffic from the ZeroTier virtual interface"
   community.general.ufw:
     rule: allow
     direction: in
     interface: "{{ base_zerotier_interface }}"
+    comment: "allow incoming from ZeroTier network"
 
 - name: "System | Check if already in ZeroTier network"
   ansible.builtin.command:
