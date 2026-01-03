@@ -1,0 +1,17 @@
+base_user_groups:
+  - adm
+  - sudo
+  - sambashare
+  - docker
+base_sshd_unit_name: ssh.service
+base_ufw_ssh_app_profile_name: OpenSSH
+base_firewall_rules:
+  - { port: '80', proto: 'tcp', comment: 'http' }
+  - { port: '443', proto: 'tcp', comment: 'https' }
+  - { port: '32400', proto: 'tcp', comment: 'Plex Media Server' }
+  - { port: '1900',  proto: 'udp', comment: 'Plex DLNA' }
+  - { port: '3005',  proto: 'tcp', comment: 'Plex Companion' }
+  - { port: '5353',  proto: 'udp', comment: 'Discovery' }
+  - { port: '8324',  proto: 'tcp', comment: 'Plex Roku' }
+  - { port: '32410:32414', proto: 'udp', comment: 'Plex GDM' }
+  - { port: '32469', proto: 'tcp', comment: 'Plex DLNA' }
