@@ -3,13 +3,21 @@
 pipx = "latest"
 "pipx:ansible-lint" = "latest"
 
+[tasks.install-collections]
+description = "Install ansible collections"
+run = "ansible-galaxy install -r requirements.yml"
+
 [tasks.apply-local]
 description = "Apply configuration to the current host locally"
-run = "ansible-playbook local.yml -l \"$(hostname)\" -c local -b"
+run = "ansible-playbook local.yml -l \"$(hostname)\" -c local"
 
 [tasks.dry-run-local]
 description = "Dry run (check mode) configuration on the current host locally with diffs"
-run = "ansible-playbook local.yml -l \"$(hostname)\" -c local -b --check --diff"
+run = "ansible-playbook local.yml -l \"$(hostname)\" -c local --check --diff"
+
+[tasks.get-ansible-facts]
+description = "List ansible facts"
+run = "ansible \"$(hostname)\" -c local -m setup"
 
 [tasks.lint]
 description = "Run linters (ansible-lint, markdownlint)"

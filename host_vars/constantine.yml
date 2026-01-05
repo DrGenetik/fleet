@@ -1,4 +1,0 @@
-base_user_groups:
-  - docker
-  - wheel
-base_user_shell: /usr/bin/bash

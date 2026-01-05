@@ -1,0 +1,11 @@
+- name: Get current firewall global state
+  ansible.builtin.command:
+    cmd: /usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate
+  register: base_firewall_state_check
+  changed_when: false # This task only gathers info, doesn't change state
+
+- name: Enable the macOS Application Firewall if not enabled
+  ansible.builtin.command:
+    cmd: /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
+  changed_when: false # This task only enables the firewall if it's off, doesn't change state if already on
+  when: base_firewall_state_check.stdout is search("State = 0") # Run only if state is 'off' (0)

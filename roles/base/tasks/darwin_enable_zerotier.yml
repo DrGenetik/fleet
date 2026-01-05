@@ -1,0 +1,19 @@
+- name: "System | Start zerotier-one service"
+  community.general.launchd:
+    name: com.zerotier.one
+    state: started
+    enabled: true
+  become: true
+
+- name: "System | Check if already in ZeroTier network"
+  ansible.builtin.command:
+    cmd: "zerotier-cli listnetworks -j"
+  register: base_zerotier_networks
+  changed_when: false
+  check_mode: false
+
+- name: "System | Join ZeroTier Network"
+  ansible.builtin.command:
+    cmd: "zerotier-cli join {{ zerotier_network_id }}"
+  changed_when: false
+  when: "zerotier_network_id not in (base_zerotier_networks.stdout | from_json | map(attribute='nwid') | list)"

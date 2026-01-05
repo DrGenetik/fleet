@@ -1,0 +1,12 @@
+- name: "System | Check current remote login status"
+  ansible.builtin.shell: "set -o pipefail && systemsetup -getremotelogin | cut -d: -f2 | xargs"
+  register: base_current_ssh_status
+  changed_when: false
+  check_mode: false
+  become: true
+
+- name: "System | Enable Remote Login only if it is off"
+  ansible.builtin.command: "systemsetup -setremotelogin on"
+  when: "'Off' in base_current_ssh_status.stdout"
+  changed_when: false
+  become: true

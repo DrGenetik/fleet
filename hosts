@@ -3,6 +3,7 @@ localhost ansible_connection=local
 
 [laptop]
 rincewind
+dresden
 
 [workstation]
 jareth

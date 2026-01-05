@@ -7,148 +7,28 @@
 #   run_once: true
 #   delegate_to: localhost
 
-- name: "System | Install Base Packages"
-  ansible.builtin.apt:
-    name:
-      - build-essential
-      - curl
-      - git
-      - ansible-core
-      - zerotier-one
-      # - libnotify-bin
-      # - sway-notification-center
-      - openssh-server
-      - ufw
-      - zsh
-    state: present
-  become: true
-  when: ansible_facts['os_family'] | lower == 'debian'
+- name: "System | Load OS Specific Variables"
+  ansible.builtin.include_vars:
+    dir: vars
+    files_matching: "{{ item | lower }}.yml"
+  loop:
+    - "{{ ansible_facts.system }}"
+    - "{{ ansible_facts.os_family }}"
+    - "{{ ansible_facts.distribution }}"
 
 - name: "System | Install Base Packages"
-  community.general.pacman:
-    name:
-      - curl
-      - git
-      - ansible-core
-      - zerotier-one
-      - net-tools
-      - openssh
-      - vim
-      - nano
-      - omarchy-zsh
-    state: present
-  become: true
-  when: ansible_facts['os_family'] | lower == 'archlinux'
+  ansible.builtin.include_tasks: "{{ ansible_facts.system | lower }}_install_packages.yml"
+  vars:
+    base_final_package_names: "{{ (base_package_names + base_sshd_package_names + base_zerotier_package_names + base_user_shell_package_names) | unique }}"
 
-- name: "System | Gather list of installed packages"
-  ansible.builtin.package_facts:
-    manager: auto
+- name: "System | Enable and configure firewall"
+  ansible.builtin.include_tasks: "{{ ansible_facts.system | lower }}_enable_firewall.yml"
 
-- name: Enable uncomplicated firewall
-  community.general.ufw:
-    state: enabled
-  become: true
-  when:
-    - "'ufw' in ansible_facts.packages"
+- name: "System | Enable and start sshd"
+  ansible.builtin.include_tasks: "{{ ansible_facts.system | lower }}_enable_sshd.yml"
 
-- name: "System | Enable and Start sshd"
-  ansible.builtin.systemd:
-    name: "{{ base_sshd_unit_name }}"
-    state: started
-    enabled: true
-  become: true
-  when:
-    - "'openssh' in ansible_facts.packages or 'openssh-server' in ansible_facts.packages"
+- name: "System | Enable and start zerotier-one"
+  ansible.builtin.include_tasks: "{{ ansible_facts.system | lower }}_enable_zerotier.yml"
 
-- name: Allow SSH (OpenSSH profile)
-  community.general.ufw:
-    rule: limit
-    name: "{{ base_ufw_ssh_app_profile_name }}"
-  become: true
-  when:
-    - "'openssh' in ansible_facts.packages or 'openssh-server' in ansible_facts.packages"
-    - "'ufw' in ansible_facts.packages"
-
-- name: "System | Enable and Start zerotier-one"
-  ansible.builtin.systemd:
-    name: zerotier-one
-    state: started
-    enabled: true
-  become: true
-  when: "'zerotier-one' in ansible_facts.packages"
-
-- name: "Allow ZeroTier UDP port for direct P2P connections"
-  community.general.ufw:
-    rule: allow
-    port: "9993"
-    proto: udp
-    comment: "allow ZeroTier direct P2P connections"
-
-- name: "Allow all incoming traffic from the ZeroTier virtual interface"
-  community.general.ufw:
-    rule: allow
-    direction: in
-    interface: "{{ base_zerotier_interface }}"
-    comment: "allow incoming from ZeroTier network"
-
-- name: "System | Check if already in ZeroTier network"
-  ansible.builtin.command:
-    cmd: "zerotier-cli listnetworks -j"
-  register: base_zerotier_networks
-  changed_when: false
-  become: true
-  check_mode: false
-  when: "'zerotier-one' in ansible_facts.packages"
-
-- name: "System | Join ZeroTier Network"
-  ansible.builtin.command:
-    cmd: "zerotier-cli join {{ zerotier_network_id }}"
-  become: true
-  changed_when: false
-  when:
-    - "'zerotier-one' in ansible_facts.packages"
-    - "zerotier_network_id not in (base_zerotier_networks.stdout | from_json | map(attribute='nwid') | list)"
-
-- name: "Allow all required ports in UFW"
-  community.general.ufw:
-    rule: allow
-    port: "{{ item.port | string }}"
-    proto: "{{ item.proto }}"
-    comment: "{{ item.comment }}"
-  loop: "{{ base_firewall_rules }}"
-
-- name: "User | Ensure User Exists"
-  ansible.builtin.user:
-    name: "{{ user_name }}"
-    shell: "{{ base_user_shell }}"
-    groups: "{{ base_user_groups }}"
-    append: true
-  become: true
-
-- name: "User | Install mise"
-  become: true
-  become_user: "{{ user_name }}"
-  ansible.builtin.shell: |
-    set -o pipefail
-    curl https://mise.run | sh
-  args:
-    creates: "/home/{{ user_name }}/.local/bin/mise"
-    executable: /bin/bash
-
-- name: "User | Install and configure chezmoi with mise"
-  become: true
-  become_user: "{{ user_name }}"
-  ansible.builtin.command:
-    chdir: "/home/{{ user_name }}"
-    cmd: "/home/{{ user_name }}/.local/bin/mise use --global chezmoi"
-    creates: "/home/{{ user_name }}/.local/share/mise/installs/chezmoi"
-
-- name: "User | Init dotfiles"
-  become: true
-  become_user: "{{ user_name }}"
-  ansible.builtin.command:
-    chdir: "/home/{{ user_name }}"
-    cmd: "/home/{{ user_name }}/.local/bin/mise x -- chezmoi init DrGenetik"
-    creates: "/home/{{ user_name }}/.local/share/chezmoi/.git"
-  environment:
-    GITHUB_TOKEN: "{{ github_token }}"
+- name: "User | Configure user environment"
+  ansible.builtin.include_tasks: "user_environment.yml"
