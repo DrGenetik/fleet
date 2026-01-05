@@ -2,20 +2,30 @@
 # tasks to complete before running roles
 - name: Pre-run Setup
   hosts: all
-  become: true
   pre_tasks:
-    - name: Pre-run | Update package cache (debian, etc)
+    - name: Ensure another collection from a requirements file is installed
+      community.general.ansible_galaxy_install:
+        requirements_file: "./requirements.yml"
+        type: collection
+
+    - name: Pre-run | Update package cache (apt-based systems)
+      become: true
       ansible.builtin.apt:
         update_cache: true
-        cache_valid_time: 3600
       changed_when: false
-      when: ansible_facts['os_family'] | lower == 'debian'
+      when: ansible_facts.pkg_mgr | lower == 'apt'
 
-    - name: Pre-run | Update package cache (archlinux, etc)
+    - name: Pre-run | Update package cache (pacman-based systems)
+      become: true
       community.general.pacman:
         update_cache: true
       changed_when: false
-      when: ansible_facts['os_family'] | lower == 'archlinux'
+      when: ansible_facts.pkg_mgr | lower == 'pacman'
+
+    - name: Pre-run | Update Homebrew (macOS)
+      community.general.homebrew:
+        update_homebrew: true
+      when: ansible_facts.pkg_mgr | lower == 'homebrew'
 
 # run roles
 - name: Apply base role
@@ -36,16 +46,17 @@
 # end of run cleanup and reporting
 - name: Cleanup
   hosts: all
-  become: true
-  tasks:
+  post_tasks:
     - name: Cleanup package cache (debian and ubuntu)
+      become: true
       ansible.builtin.apt:
         autoclean: true
       changed_when: false
-      when: ansible_facts['os_family'] | lower == 'debian'
+      when: ansible_facts.pkg_mgr | lower == 'apt'
 
     - name: Autoremove orphan packages (debian and ubuntu)
+      become: true
       ansible.builtin.apt:
         autoremove: true
         purge: true
-      when: ansible_facts['os_family'] | lower == 'debian'
+      when: ansible_facts.pkg_mgr | lower == 'apt'

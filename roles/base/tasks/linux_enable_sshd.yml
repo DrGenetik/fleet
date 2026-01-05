@@ -1,0 +1,12 @@
+- name: "System | Enable and Start sshd"
+  ansible.builtin.systemd:
+    name: "{{ base_sshd_unit_name }}"
+    state: started
+    enabled: true
+  become: true
+
+- name: Allow SSH (OpenSSH profile)
+  community.general.ufw:
+    rule: limit
+    name: "{{ base_ufw_ssh_app_profile_name }}"
+  become: true

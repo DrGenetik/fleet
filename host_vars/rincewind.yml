@@ -1,13 +1,3 @@
-base_user_groups:
-  - sudo
-  - plugdev
-  - input
-  - video
-  - dialout
-  - systemd-journal
-  - netdev
-  - audio
-  - bluetooth
 roles_to_run:
   - 3d-printing
   - amateur-radio

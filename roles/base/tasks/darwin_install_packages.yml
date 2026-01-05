@@ -1,0 +1,4 @@
+- name: "System | Install Base Packages (homebrew)"
+  community.general.homebrew:
+    name: "{{ base_final_package_names }}"
+    state: present

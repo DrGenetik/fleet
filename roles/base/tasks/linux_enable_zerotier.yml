@@ -1,0 +1,35 @@
+- name: "System | Enable and Start zerotier-one"
+  ansible.builtin.systemd:
+    name: "{{ base_zerotier_unit_name }}"
+    state: started
+    enabled: true
+  become: true
+
+- name: "Allow ZeroTier UDP port for direct P2P connections"
+  community.general.ufw:
+    rule: allow
+    port: "9993"
+    proto: udp
+    comment: "allow ZeroTier direct P2P connections"
+
+- name: "Allow all incoming traffic from the ZeroTier virtual interface"
+  community.general.ufw:
+    rule: allow
+    direction: in
+    interface: "{{ base_zerotier_interface }}"
+    comment: "allow incoming from ZeroTier network"
+
+- name: "System | Check if already in ZeroTier network"
+  ansible.builtin.command:
+    cmd: "zerotier-cli listnetworks -j"
+  register: base_zerotier_networks
+  changed_when: false
+  become: true
+  check_mode: false
+
+- name: "System | Join ZeroTier Network"
+  ansible.builtin.command:
+    cmd: "zerotier-cli join {{ zerotier_network_id }}"
+  become: true
+  changed_when: false
+  when: "zerotier_network_id not in (base_zerotier_networks.stdout | from_json | map(attribute='nwid') | list)"

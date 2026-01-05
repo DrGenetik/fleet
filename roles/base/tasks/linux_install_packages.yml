@@ -1,0 +1,5 @@
+- name: "System | Install Base Packages (linux)"
+  ansible.builtin.apt:
+    name: "{{ base_final_package_names }}"
+    state: present
+  become: true

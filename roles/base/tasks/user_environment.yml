@@ -1,0 +1,36 @@
+- name: "User | Ensure User Exists"
+  ansible.builtin.user:
+    name: "{{ user_name }}"
+    shell: "{{ base_user_shell }}"
+    groups: "{{ base_user_groups }}"
+    append: true
+  become: true
+
+- name: "User | Install mise"
+  become: true
+  become_user: "{{ user_name }}"
+  ansible.builtin.shell: |
+    set -o pipefail
+    curl https://mise.run | sh
+  args:
+    chdir: "{{ base_user_home_directory }}"
+    creates: "{{ base_user_home_directory }}/.local/bin/mise"
+    executable: /bin/bash
+
+- name: "User | Install and configure chezmoi with mise"
+  become: true
+  become_user: "{{ user_name }}"
+  ansible.builtin.command:
+    chdir: "{{ base_user_home_directory }}"
+    cmd: ".local/bin/mise use --global chezmoi"
+    creates: "{{ base_user_home_directory }}/.local/share/mise/installs/chezmoi"
+
+- name: "User | Init dotfiles"
+  become: true
+  become_user: "{{ user_name }}"
+  ansible.builtin.command:
+    chdir: "{{ base_user_home_directory }}"
+    cmd: ".local/bin/mise x -- chezmoi init DrGenetik"
+    creates: "{{ base_user_home_directory }}/.local/share/chezmoi/.git"
+  environment:
+    GITHUB_TOKEN: "{{ github_token }}"

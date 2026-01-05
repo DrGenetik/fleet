@@ -1,0 +1,20 @@
+base_package_names:
+  - curl
+  - git
+  - ansible-core
+  - net-tools
+  - vim
+  - nano
+  - omarchy-zsh
+
+base_sshd_package_names:
+  - openssh
+base_sshd_unit_name: sshd
+base_ufw_ssh_app_profile_name: OpenSSH
+
+base_user_groups:
+  - docker
+  - wheel
+base_user_shell: /usr/bin/bash
+base_user_shell_package_names:
+  - zsh

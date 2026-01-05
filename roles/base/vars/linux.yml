@@ -1,0 +1,10 @@
+base_zerotier_package_names:
+  - zerotier-one
+  - ufw
+base_zerotier_unit_name: zerotier-one.service
+base_zerotier_interface: ztyouzrib2
+
+base_user_shell: /usr/bin/zsh
+base_user_shell_package_names:
+  - zsh
+base_user_home_directory: /home/{{ user_name }}
