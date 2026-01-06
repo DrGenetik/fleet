@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT-0
 ---
-- name: Test amateur-radio role
+- name: Test printing_3d role
   hosts: localhost
   remote_user: root
   roles:
-    - amateur-radio
+    - printing_3d

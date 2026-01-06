@@ -1,0 +1,5 @@
+# todo: setup u2f/fido2 auth for user
+# todo: mount NAS
+# todo: enable ssh server
+# todo: setup container runtime
+# todo: setup k8s

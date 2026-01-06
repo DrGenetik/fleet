@@ -1,6 +1,6 @@
 roles_to_run:
-  - 3d-printing
-  - amateur-radio
+  - printing_3d
+  - amateur_radio
   - meshtastic
   - reform
   - sdr
