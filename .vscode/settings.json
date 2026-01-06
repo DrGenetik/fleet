@@ -1,4 +1,5 @@
 {
-    "ansible.python.interpreterPath": "/usr/local/bin/python3",
-    "ansible.validation.lint.path": "~/.local/share/mise/shims/ansible-lint"
+    "ansible.python.interpreterPath": "/usr/bin/python3",
+    "ansible.validation.lint.path": "ansible-lint",
+    "ansible.ansible.path": "ansible"
 }
