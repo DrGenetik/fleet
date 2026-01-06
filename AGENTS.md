@@ -4,6 +4,15 @@ This is an Ansible configuration repository for managing a fleet of personal com
 
 ## Essential Commands
 
+### Agent Tooling
+
+The environment is configured with tools to assist AI agents and developers:
+
+- **Ansible Language Server**: Installed via `mise` (`npm:@ansible/ansible-language-server`). Provides syntax validation and autocompletion.
+- **GitHub MCP**: Installed via `mise` (`npm:@modelcontextprotocol/server-github`). Enables agents to interact with GitHub repositories and issues.
+- **Ansible Lint**: Installed via `mise` (`pipx:ansible-lint`). Run with `mise run lint`.
+- **Beads**: Issue tracking integrated into the repo.
+
 ### Task Management (Mise)
 
 This project uses **[mise](https://mise.jdx.dev/)** to manage development tasks and dependencies. Prefer these commands over running `ansible-playbook` directly when possible.
