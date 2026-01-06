@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT-0
 galaxy_info:
   author: "T.R. Fullhart <kayos@genetikayos.com>"
-  description: 3d-printing configuration
+  description: printing_3d configuration
   company: None
   license: MIT-0
   min_ansible_version: "2.1"

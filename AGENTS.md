@@ -53,8 +53,8 @@ If you need to bypass mise or run on remote hosts:
 - **`local.yml`**: The main playbook.
 - **`hosts`**: Static inventory file.
 - **`roles/`**:
-  - `base`: Common config (packages, user setup, `mise` installation).
-  - Domain roles: `3d-printing`, `sdr`, `meshtastic`, `reform`, `amateur-radio`.
+  - `base`: Common config (packages, user setup, `mise` installation, `chezmoi` for dotfiles).
+  - Domain roles: `printing_3d`, `sdr`, `meshtastic`, `reform`, `amateur_radio`.
 - **`group_vars/`**:
   - `all/`: Global variables.
     - `vars.yml`: Non-sensitive global variables (e.g., `user_name`).
@@ -72,9 +72,13 @@ Roles are assigned per-host via the `roles_to_run` list variable defined in `hos
 ```yaml
 # host_vars/rincewind.yml
 roles_to_run:
-  - 3d-printing
+  - printing_3d
   - sdr
 ```
+
+### User Configuration (Chezmoi)
+
+User dotfiles are managed via **[chezmoi](https://www.chezmoi.io/)**, installed and initialized by the `base` role using `mise`.
 
 ### Code Style & Linting
 
@@ -92,7 +96,6 @@ roles_to_run:
 
 ## Conventions & Gotchas
 
-- **Role Naming**: Role names in this project use hyphens (e.g., `3d-printing`), which conflicts with the default `role-name` linter rule. This rule has been disabled in `.ansible-lint`.
 - **`become` Keyword**: Some tasks (like `ansible.builtin.user`) require an explicit `become: true` even if the parent play already has `become` set. This is a nuance of how Ansible applies privileges.
 - **User Variable**: The primary user is defined as `user_name` in `group_vars/all/vars.yml` (default: `kayos`).
 - **`group_vars` Precedence**: A critical Ansible behavior to be aware of: if a directory named `group_vars/all/` exists, Ansible will **ignore** a file named `group_vars/all.yml`. All variables for the `all` group must be placed in files *within* that directory. This was the root cause of an earlier `user_name is undefined` error.

@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT-0
 galaxy_info:
   author: "T.R. Fullhart <kayos@genetikayos.com>"
-  description: amateur-radio configuration
+  description: amateur_radio configuration
   company: None
   license: MIT-0
   min_ansible_version: "2.1"

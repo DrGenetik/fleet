@@ -5,6 +5,9 @@
 - name: "SDR | Blacklist DVB kernel modules for RTL-SDR"
   ansible.builtin.copy:
     dest: /etc/modprobe.d/blacklist-dvb.conf
+    # todo: move the content of this file to the files dir
+    # todo: add a header to the file to say why we do it
+    # todo: add a header to the file to say it was configured via ansible
     content: |
       blacklist dvb_usb_rtl28xxu
     mode: "0644"
@@ -41,6 +44,8 @@
       }}
   when: sdr_release_info.status == 200
 
+# todo: does this file need to be cleaned up after the play
+# todo: is there a better way to save a temp file during an ansible play
 - name: "SDR++ | Download Debian package"
   ansible.builtin.get_url:
     url: "{{ sdr_sdrplusplus_url }}"
