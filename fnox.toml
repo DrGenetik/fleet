@@ -1,2 +1,3 @@
 [secrets]
 GITHUB_PERSONAL_ACCESS_TOKEN = { provider = "onepass", value = "op://ServiceAccountAccess/Crush GitHub Copilot Token/credential" }
+TODOIST_API_KEY = { provider = "onepass", value = "op://ServiceAccountAccess/Todoist API Token/credential" }
