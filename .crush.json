@@ -7,10 +7,8 @@
   },
   "mcp": {
     "github": {
-      "command": "mcp-server-github",
-      "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "op://ServiceAccountAccess/Constantine GitHub Clone Token/credential"
-      }
+      "type": "stdio",
+      "command": "mcp-server-github"
     }
   }
 }
