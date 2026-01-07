@@ -105,6 +105,7 @@ User dotfiles are managed via **[chezmoi](https://www.chezmoi.io/)**, installed 
 
 ## Conventions & Gotchas
 
+- **Next Steps**: Always capture identified next steps as new tasks in the `beads` system (`bd create ...`). Do not leave next steps as comments in code or just text in the final response.
 - **`become` Keyword**: Some tasks (like `ansible.builtin.user`) require an explicit `become: true` even if the parent play already has `become` set. This is a nuance of how Ansible applies privileges.
 - **User Variable**: The primary user is defined as `user_name` in `group_vars/all/vars.yml` (default: `kayos`).
 - **`group_vars` Precedence**: A critical Ansible behavior to be aware of: if a directory named `group_vars/all/` exists, Ansible will **ignore** a file named `group_vars/all.yml`. All variables for the `all` group must be placed in files *within* that directory. This was the root cause of an earlier `user_name is undefined` error.
