@@ -12,7 +12,8 @@
     },
     "todoist": {
       "type": "stdio",
-      "command": "todoist-ai"
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://ai.todoist.net/mcp"]
     }
   }
 }
