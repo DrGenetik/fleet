@@ -9,6 +9,10 @@
     "github": {
       "type": "stdio",
       "command": "mcp-server-github"
+    },
+    "todoist": {
+      "type": "stdio",
+      "command": "todoist-ai"
     }
   }
 }
