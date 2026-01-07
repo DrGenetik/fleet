@@ -45,3 +45,7 @@ run = "ansible-vault edit group_vars/all/secrets.yml"
 [tasks."secrets:rekey"]
 description = "Rekey the vault with a new password"
 run = "ansible-vault rekey group_vars/all/secrets.yml"
+
+[tasks.test]
+description = "Run tests for base role (dry-run)"
+run = "ANSIBLE_ROLES_PATH=roles ansible-playbook roles/base/tests/test.yml -i hosts -l localhost -c local --check -e \"zerotier_network_id=0000000000000000 github_token=dummytoken\""
