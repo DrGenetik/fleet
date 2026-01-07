@@ -1,0 +1,8 @@
+{
+  "lsp": {
+    "ansible": {
+      "command": "ansible-language-server",
+      "args": ["--stdio"]
+    }
+  }
+}
