@@ -10,7 +10,7 @@ base_package_names:
 base_sshd_package_names:
   - openssh
 base_sshd_unit_name: sshd
-base_ufw_ssh_app_profile_name: OpenSSH
+base_ufw_ssh_app_profile_name: SSH
 
 base_user_groups:
   - docker
