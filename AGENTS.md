@@ -1,12 +1,18 @@
 # Codebase Context for Agents
 
-This is an Ansible configuration repository for managing a fleet of personal computers (laptops, workstations, servers). It automates system setup, package installation, and user configuration across multiple operating systems (primarily Debian/Ubuntu, with Darwin/macOS support).
+This is an Ansible configuration repository for managing a fleet of personal computers (laptops, workstations, servers). It automates system setup, package installation, and user configuration.
+
+**Supported Operating Systems:**
+
+- **Linux**: Debian/Ubuntu (primary), Arch Linux (partial support)
+- **macOS**: Darwin via Homebrew
+- **Package Managers**: apt, pacman, homebrew
 
 ## Quick Start for Agents
 
 1. **Review this document** completely to understand the codebase structure and conventions
 2. **Run `bd quickstart`** to learn beads issue tracking basics
-3. **Run `bd ready`** to find available work
+3. **Run `bd ready --json`** to find available work
 4. **Claim work** with `bd update <id> --status in_progress`
 5. **Complete the task** following conventions in this document
 6. **Close issue** with `bd close <id>`
@@ -40,7 +46,7 @@ This project uses **[mise](https://mise.jdx.dev/)** to manage development tasks 
   mise run install-collections
   ```
 
-  *Installs Ansible collections from `requirements.yml`.*
+  _Installs Ansible collections from `requirements.yml`._
 
 - **Apply configuration locally**:
 
@@ -48,7 +54,7 @@ This project uses **[mise](https://mise.jdx.dev/)** to manage development tasks 
   mise run apply-local
   ```
 
-  *Automatically targets the current hostname.*
+  _Automatically targets the current hostname._
 
 - **Dry run (Check mode + Diff)**:
 
@@ -62,7 +68,7 @@ This project uses **[mise](https://mise.jdx.dev/)** to manage development tasks 
   mise run lint
   ```
 
-  *Runs `ansible-lint` (default config) and `markdownlint`.*
+  _Runs `ansible-lint` (default config) and `markdownlint`._
 
 - **Run Tests**:
 
@@ -70,7 +76,7 @@ This project uses **[mise](https://mise.jdx.dev/)** to manage development tasks 
   mise run test
   ```
 
-  *Runs a dry-run test of the `base` role on localhost.*
+  _Runs a dry-run test of the `base` role on localhost._
 
 - **Secret Management**:
   - `mise run secrets:view`: View vaulted secrets.
@@ -106,7 +112,7 @@ If you need to bypass mise or run on remote hosts:
   - `[workstation]`: jareth, constantine
   - `[server]`: minecraft
 - **`roles/`**: Six roles total:
-  - `base`: Common configuration (packages, user setup, `mise` installation, `chezmoi` for dotfiles, beads setup, Oh My Zsh)
+  - `base`: Common configuration (packages, user setup, `mise` installation, `chezmoi` for dotfiles)
   - `printing_3d`: 3D printing tools and configuration
   - `sdr`: Software Defined Radio tools (hamradio-sdr, SDR++)
   - `meshtastic`: Meshtastic radio configuration
@@ -173,8 +179,8 @@ The `base` role loads OS-specific variables dynamically:
     dir: vars
     files_matching: "{{ item | lower }}.yml"
   loop:
-    - "{{ ansible_facts.system }}"      # Linux, Darwin
-    - "{{ ansible_facts.os_family }}"   # Debian, Archlinux
+    - "{{ ansible_facts.system }}" # Linux, Darwin
+    - "{{ ansible_facts.os_family }}" # Debian, Archlinux
     - "{{ ansible_facts.distribution }}" # Ubuntu
 ```
 
@@ -188,15 +194,6 @@ User dotfiles are managed via **[chezmoi](https://www.chezmoi.io/)**, installed 
 2. Use `mise` to install `chezmoi` globally
 3. Initialize chezmoi with GitHub repo: `chezmoi init DrGenetik`
 4. Dotfiles are pulled from the configured repo
-
-### Beads Integration
-
-The `base` role installs and configures `bd` (beads):
-
-1. Install via mise: `mise use --global go:github.com/steveyegge/beads/cmd/bd@latest`
-2. Generate zsh completions into Oh My Zsh custom plugins
-3. Issues are tracked in `.beads/issues.jsonl`
-4. Git hooks in `.beads-hooks/` provide automatic sync
 
 ### Code Style & Linting
 
@@ -212,7 +209,7 @@ The `base` role installs and configures `bd` (beads):
 
 - **Encryption**: Sensitive variables are encrypted using Ansible Vault in `group_vars/all/secrets.yml`.
 - **Vault Password Source**: The vault password is fetched on-demand via `.get_vault_password.sh`, which uses the 1Password CLI (`op`) to read from the vault:
-  
+
   ```bash
   op read "op://ServiceAccountAccess/Fleet ansible-vault/password"
   ```
@@ -234,10 +231,9 @@ The `base` role installs and configures `bd` (beads):
 - **TODOs in Code**: Existing roles contain inline `# todo:` comments. These are acceptable as documentation of known issues, but new work should be tracked in beads instead.
 - **`become` Keyword**: Some tasks (like `ansible.builtin.user`) require an explicit `become: true` even if the parent play already has `become` set. This is a nuance of Ansible privilege escalation.
 - **User Variable**: The primary user is defined as `user_name` in `group_vars/all/vars.yml` (default: `kayos`).
-- **`group_vars` Precedence**: **Critical Ansible behavior**: If a directory named `group_vars/all/` exists, Ansible will **ignore** a file named `group_vars/all.yml`. All variables for the `all` group must be placed in files *within* `group_vars/all/` directory.
+- **`group_vars` Precedence**: **Critical Ansible behavior**: If a directory named `group_vars/all/` exists, Ansible will **ignore** a file named `group_vars/all.yml`. All variables for the `all` group must be placed in files _within_ `group_vars/all/` directory.
 - **OS Support**: Primary targets are **Debian/Ubuntu** (`ansible_facts['os_family']|lower == 'debian'`). Darwin/macOS support exists via platform-specific task files.
 - **Python Interpreter**: Explicitly set to `auto_silent` in `ansible.cfg` to avoid interpreter discovery warnings.
-- **YAML Output**: Configured with `result_format = yaml` in `ansible.cfg` under `[callback_default]` for clean YAML output.
 - **Prerequisites**: The `base` role ensures essential packages (`ansible-core`, `mise`, etc.) are installed on target systems.
 - **Package Manager Detection**: Playbooks use `ansible_facts.pkg_mgr` to detect and handle apt, pacman, or homebrew.
 - **Variable Merging**: `hash_behaviour` is set to `replace` (default), not `merge`.
@@ -266,7 +262,7 @@ base_package_names:
   - curl
   - git
   - zsh
-  - newpackage  # Add here
+  - newpackage # Add here
 ```
 
 Categories of packages:
@@ -349,7 +345,7 @@ Example override:
 
 ```yaml
 # host_vars/rincewind.yml
-sdr_release_override: sid  # Override default release detection
+sdr_release_override: sid # Override default release detection
 ```
 
 ## Landing the Plane (Session Completion)
@@ -388,7 +384,7 @@ This project uses [Beads (bd)](https://github.com/steveyegge/beads) for issue tr
 ### Core Rules
 
 - Track ALL work in bd (never use markdown TODOs or comment-based task lists)
-- Use `bd ready` to find available work
+- Use `bd ready --json` to find available work
 - Use `bd create` to track new issues/tasks/bugs
 - Use `bd sync` at end of session to sync with git remote
 - Git hooks auto-sync on commit/merge
@@ -396,7 +392,7 @@ This project uses [Beads (bd)](https://github.com/steveyegge/beads) for issue tr
 ### Quick Reference
 
 ```bash
-bd ready                              # Show issues ready to work (no blockers)
+bd ready --json                       # Show issues ready to work (no blockers)
 bd list --status=open                 # List all open issues
 bd create --title="..." --type=task   # Create new issue
 bd update <id> --status=in_progress   # Claim work
@@ -407,7 +403,7 @@ bd sync                               # Sync with git remote
 
 ### Workflow
 
-1. Check for ready work: `bd ready`
+1. Check for ready work: `bd ready --json`
 2. Claim an issue: `bd update <id> --status=in_progress`
 3. Do the work following this document's conventions
 4. Mark complete: `bd close <id>`
