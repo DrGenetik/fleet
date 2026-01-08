@@ -4,3 +4,4 @@
 
 printing_3d_packages:
   - prusa-slicer
+  - blender
