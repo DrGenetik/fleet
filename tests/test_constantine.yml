@@ -1,0 +1,7 @@
+- name: Test constantine config
+  hosts: constantine
+  gather_facts: false
+  tasks:
+    - name: Debug roles_to_run
+      debug:
+        var: roles_to_run
