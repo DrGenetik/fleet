@@ -1,5 +1,13 @@
 {
-    "ansible.python.interpreterPath": "/usr/bin/python3",
-    "ansible.validation.lint.path": "ansible-lint",
-    "ansible.ansible.path": "ansible"
+  "ansible.python.interpreterPath": "python3",
+  "ansible.validation.lint.path": "ansible-lint",
+  "ansible.ansible.path": "ansible",
+  "go.goroot": "/Users/kayos/.local/share/mise/installs/go/1.25.5",
+  "debug.javascript.defaultRuntimeExecutable": {
+    "pwa-node": "/Users/kayos/.local/share/mise/shims/node"
+  },
+  "go.alternateTools": {
+    "go": "/Users/kayos/.local/share/mise/shims/go"
+  }
 }
+
