@@ -6,7 +6,6 @@
 pipx = "latest"
 "pipx:ansible-lint" = "latest"
 "go:github.com/steveyegge/beads/cmd/bd" = "latest"
-1password-cli = "latest"
 github-cli = "latest"
 
 [tasks.install-collections]
