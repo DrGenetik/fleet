@@ -1,0 +1,12 @@
+# SPDX-License-Identifier: MIT-0
+---
+# tasks file for user_core
+
+- name: "User Core | Load OS Specific Variables"
+  ansible.builtin.include_vars:
+    dir: vars
+    files_matching: "{{ item | lower }}.yml"
+  loop:
+    - "{{ ansible_facts.system }}"
+    - "{{ ansible_facts.os_family }}"
+    - "{{ ansible_facts.distribution }}"
