@@ -13,6 +13,7 @@
       ansible.builtin.apt:
         update_cache: true
       changed_when: false
+      ignore_errors: "{{ ansible_check_mode }}"
       when: ansible_facts.pkg_mgr | lower == 'apt'
 
     - name: Pre-run | Update package cache (pacman-based systems)
@@ -20,6 +21,7 @@
       community.general.pacman:
         update_cache: true
       changed_when: false
+      ignore_errors: "{{ ansible_check_mode }}"
       when: ansible_facts.pkg_mgr | lower == 'pacman'
 
     - name: Pre-run | Update Homebrew (macOS)
