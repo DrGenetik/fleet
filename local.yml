@@ -1,13 +1,20 @@
 ---
 # tasks to complete before running roles
+- name: Bootstrap
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Ensure collections are installed from requirements.yml
+      ansible.builtin.command: ansible-galaxy install -r requirements.yml
+      register: galaxy_result
+      changed_when: "'was installed properly' in galaxy_result.stdout"
+      delegate_to: localhost
+      run_once: true
+      check_mode: false
+
 - name: Pre-run Setup
   hosts: all
-  pre_tasks:
-    - name: Ensure another collection from a requirements file is installed
-      community.general.ansible_galaxy_install:
-        requirements_file: "./requirements.yml"
-        type: collection
-
+  tasks:
     - name: Pre-run | Update package cache (apt-based systems)
       become: true
       ansible.builtin.apt:
