@@ -7,6 +7,7 @@ pipx = "latest"
 "pipx:ansible-lint" = "latest"
 "go:github.com/steveyegge/beads/cmd/bd" = "latest"
 github-cli = "latest"
+"pipx:beads-mcp" = "latest"
 
 [tasks.install-collections]
 description = "Install ansible collections"
@@ -38,5 +39,5 @@ run = "markdownlint ."
 run = "bd lint"
 
 [tasks.test]
-description = "Run tests for base role (dry-run)"
-run = "ANSIBLE_ROLES_PATH=roles ansible-playbook roles/base/tests/test.yml -i hosts -l localhost -c local --check -e \"zerotier_network_id=0000000000000000 github_token=dummytoken\""
+description = "Run tests for all roles (dry-run)"
+run = "ansible-playbook test_all.yml -i hosts -l localhost -c local --check -e \"zerotier_network_id=0000000000000000 github_token=dummytoken\""
