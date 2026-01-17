@@ -9,7 +9,7 @@
       register: galaxy_result
       changed_when: "'was installed properly' in galaxy_result.stdout"
       delegate_to: localhost
-      run_once: true
+      run_once: true  # noqa: run-once
       check_mode: false
 
 - name: Pre-run Setup

@@ -3,5 +3,5 @@
   gather_facts: false
   tasks:
     - name: Debug roles_to_run
-      debug:
+      ansible.builtin.debug:
         var: roles_to_run
