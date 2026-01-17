@@ -32,15 +32,14 @@
 
     - name: Pre-run | Update package cache (pacman-based systems)
       become: true
-      community.general.pacman:
-        update_cache: true
+      ansible.builtin.command: pacman -Sy --noconfirm
       changed_when: false
       ignore_errors: "{{ ansible_check_mode }}"
       when: ansible_facts.pkg_mgr | lower == 'pacman'
 
     - name: Pre-run | Update Homebrew (macOS)
-      community.general.homebrew:
-        update_homebrew: true
+      ansible.builtin.command: brew update
+      changed_when: false
       when: ansible_facts.pkg_mgr | lower == 'homebrew'
 
 # run roles

@@ -4,6 +4,7 @@ localhost ansible_connection=local
 [laptop]
 rincewind
 dresden
+caliban
 
 [workstation]
 jareth
