@@ -2,3 +2,8 @@
 fnox.local.toml
 mise.local.toml
 .ansible
+
+.beads/*
+!.beads/.gitignore
+!.beads/.gitattributes
+!.beads/config.yaml
