@@ -22,6 +22,7 @@
     install_recommends: true
     state: present
   become: true
+  when: ansible_facts['os_family'] == 'Debian'
 
 - name: "SDR++ | Find latest nightly release"
   ansible.builtin.uri:
@@ -32,6 +33,7 @@
       Accept: "application/vnd.github.v3+json"
   register: sdr_release_info
   check_mode: false
+  when: ansible_facts['os_family'] == 'Debian'
 
 - name: "SDR++ | Set download URL fact"
   ansible.builtin.set_fact:
@@ -42,7 +44,9 @@
         (sdr_release_override | default(ansible_facts['distribution_release'])) +
         '_' + ansible_facts['architecture'] + '.deb') | first).browser_download_url
       }}
-  when: sdr_release_info.status == 200
+  when: 
+    - ansible_facts['os_family'] == 'Debian'
+    - sdr_release_info.status == 200
 
 # todo: does this file need to be cleaned up after the play
 # todo: is there a better way to save a temp file during an ansible play
