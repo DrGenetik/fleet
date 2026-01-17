@@ -41,6 +41,7 @@
   hosts: all
   roles:
     - base
+    - user_core
 
 - name: Apply roles to hosts
   hosts: all
