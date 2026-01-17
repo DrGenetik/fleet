@@ -12,8 +12,11 @@
     },
     "todoist": {
       "type": "stdio",
-      "command": "npx",
-      "args": ["-y", "@doist/todoist-ai"]
+      "command": "todoist-ai"
+    },
+    "beads": {
+      "type": "stdio",
+      "command": "beads-mcp"
     }
   }
 }
