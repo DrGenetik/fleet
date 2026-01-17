@@ -1,2 +1,6 @@
 # Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
 ---
+user_core_shell: /usr/bin/zsh
+user_core_shell_package_names:
+  - zsh
+user_core_home_directory: /home/{{ user_name }}

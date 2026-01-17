@@ -1,2 +1,12 @@
 # Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
 ---
+user_core_groups:
+  - sudo
+  - plugdev
+  - input
+  - video
+  - dialout
+  - systemd-journal
+  - netdev
+  - audio
+  - bluetooth

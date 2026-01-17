@@ -1,2 +1,4 @@
 # Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
 ---
+user_core_shell: /bin/zsh
+user_core_home_directory: /Users/{{ user_name }}
