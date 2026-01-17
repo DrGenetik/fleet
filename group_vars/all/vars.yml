@@ -1,1 +1,2 @@
 user_name: kayos
+github_token: "{{ lookup('community.general.onepassword', 'op://ServiceAccountAccess/Ansible Chezmoi GitHub Token/token') }}"
