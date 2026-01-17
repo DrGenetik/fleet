@@ -68,7 +68,7 @@ This project uses **[mise](https://mise.jdx.dev/)** to manage development tasks 
   mise run lint
   ```
 
-  _Runs `ansible-lint` (default config) and `markdownlint`._
+  _Runs `ansible-lint` (default config), `markdownlint`, and `bd lint`._
 
 - **Run Tests**:
 
@@ -228,6 +228,7 @@ User dotfiles are managed via **[chezmoi](https://www.chezmoi.io/)**, installed 
 ## Conventions & Gotchas
 
 - **Issue Tracking**: Always capture identified next steps as new tasks in the `beads` system (`bd create ...`). **Never leave next steps as comments in code** or just as text in responses.
+- **Task Integrity**: After creating or updating tasks, run `bd lint` to ensure required fields (like Acceptance Criteria) are present. Correct any errors before proceeding.
 - **TODOs in Code**: Existing roles contain inline `# todo:` comments. These are acceptable as documentation of known issues, but new work should be tracked in beads instead.
 - **`become` Keyword**: Some tasks (like `ansible.builtin.user`) require an explicit `become: true` even if the parent play already has `become` set. This is a nuance of Ansible privilege escalation.
 - **User Variable**: The primary user is defined as `user_name` in `group_vars/all/vars.yml` (default: `kayos`).
@@ -355,7 +356,7 @@ sdr_release_override: sid # Override default release detection
 **MANDATORY WORKFLOW:**
 
 1. **File issues for remaining work** - Create issues for anything that needs follow-up.
-2. **Run quality gates** (if code changed) - `mise run lint`, `mise run test`.
+2. **Run quality gates** (if code changed) - `mise run lint` (checks code, docs, AND beads integrity), `mise run test`.
 3. **Update issue status** - Close finished work, update in-progress items.
 4. **PUSH TO REMOTE** - This is MANDATORY:
 
