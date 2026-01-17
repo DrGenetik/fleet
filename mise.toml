@@ -37,18 +37,6 @@ run = "markdownlint ."
 [tasks."lint:beads"]
 run = "bd lint"
 
-[tasks."secrets:view"]
-description = "View vaulted secrets (deprecated)"
-run = "echo 'secrets.yml has been removed. Use 1Password for secret management.'"
-
-[tasks."secrets:edit"]
-description = "Edit vaulted secrets (deprecated)"
-run = "echo 'secrets.yml has been removed. Use 1Password for secret management.'"
-
-[tasks."secrets:rekey"]
-description = "Rekey the vault (deprecated)"
-run = "echo 'secrets.yml has been removed. Use 1Password for secret management.'"
-
 [tasks.test]
 description = "Run tests for base role (dry-run)"
 run = "ANSIBLE_ROLES_PATH=roles ansible-playbook roles/base/tests/test.yml -i hosts -l localhost -c local --check -e \"zerotier_network_id=0000000000000000 github_token=dummytoken\""
