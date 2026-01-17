@@ -13,11 +13,11 @@
       check_mode: false
 
     - name: Check 1Password session
+      delegate_to: localhost
+      run_once: true  # noqa: run-once
       block:
         - name: Include 1Password check
           ansible.builtin.include_tasks: roles/base/tasks/check_1password.yml
-      delegate_to: localhost
-      run_once: true  # noqa: run-once
 
 - name: Pre-run Setup
   hosts: all
