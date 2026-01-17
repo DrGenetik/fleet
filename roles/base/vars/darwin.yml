@@ -2,6 +2,3 @@ base_package_names:
   - ansible
   - git
   - zerotier-one
-
-base_user_shell: /bin/zsh
-base_user_home_directory: /Users/{{ user_name }}

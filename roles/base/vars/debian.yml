@@ -10,14 +10,3 @@ base_sshd_package_names:
   - ufw
 base_sshd_unit_name: ssh.service
 base_sshd_ufw_app_profile_name: SSH
-
-base_user_groups:
-  - sudo
-  - plugdev
-  - input
-  - video
-  - dialout
-  - systemd-journal
-  - netdev
-  - audio
-  - bluetooth
