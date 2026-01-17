@@ -1,5 +1,1 @@
-base_user_groups:
-  - adm
-  - sudo
-  - sambashare
-  - docker
+---

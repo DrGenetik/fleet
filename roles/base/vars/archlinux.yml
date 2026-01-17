@@ -6,15 +6,9 @@ base_package_names:
   - vim
   - nano
   - omarchy-zsh
+  - zsh
 
 base_sshd_package_names:
   - openssh
 base_sshd_unit_name: sshd
 base_ufw_ssh_app_profile_name: SSH
-
-base_user_groups:
-  - docker
-  - wheel
-base_user_shell: /usr/bin/bash
-base_user_shell_package_names:
-  - zsh

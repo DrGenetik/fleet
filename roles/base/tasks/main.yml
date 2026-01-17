@@ -19,7 +19,7 @@
 - name: "System | Install Base Packages"
   ansible.builtin.include_tasks: "{{ ansible_facts.system | lower }}_install_packages.yml"
   vars:
-    base_final_package_names: "{{ (base_package_names + base_sshd_package_names + base_zerotier_package_names + base_user_shell_package_names) | unique }}"
+    base_final_package_names: "{{ (base_package_names + base_sshd_package_names + base_zerotier_package_names) | unique }}"
 
 - name: "System | Enable and configure firewall"
   ansible.builtin.include_tasks: "{{ ansible_facts.system | lower }}_enable_firewall.yml"
@@ -29,6 +29,3 @@
 
 - name: "System | Enable and start zerotier-one"
   ansible.builtin.include_tasks: "{{ ansible_facts.system | lower }}_enable_zerotier.yml"
-
-- name: "User | Configure user environment"
-  ansible.builtin.include_tasks: "user_environment.yml"
