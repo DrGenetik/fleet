@@ -199,7 +199,7 @@ User dotfiles are managed via **[chezmoi](https://www.chezmoi.io/)**, installed 
 
 - **FQCN**: Use Fully Qualified Collection Names for modules (e.g., `ansible.builtin.apt` instead of `apt`).
 - **Named Plays/Tasks**: All plays and tasks must have descriptive names. Capitalize names properly.
-- **SPDX License Headers**: Role files use `# SPDX-License-Identifier: MIT-0` header.
+- **Copyright Headers**: Role files use `# Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.` header.
 - **Linting**:
   - `ansible-lint`: Uses Ansible's default configuration (no custom `.ansible-lint` file). Run with `mise run lint:ansible`.
   - `markdownlint`: Configured in `.markdownlint.json` (disables MD013 line length, allows duplicate headings in siblings). Run with `mise run lint:markdown`.
@@ -244,7 +244,7 @@ User dotfiles are managed via **[chezmoi](https://www.chezmoi.io/)**, installed 
 ### Adding a New Role
 
 1. Create role structure: `mkdir -p roles/newrole/{tasks,defaults,vars,handlers,meta,tests}`
-2. Create `roles/newrole/tasks/main.yml` with SPDX header
+2. Create `roles/newrole/tasks/main.yml` with copyright header
 3. Add platform-specific task files if needed (e.g., `linux_install.yml`, `darwin_install.yml`)
 4. Define defaults in `roles/newrole/defaults/main.yml`
 5. Add role to a host's `roles_to_run` list in `host_vars/<hostname>.yml`
