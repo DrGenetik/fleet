@@ -1,8 +1,8 @@
 ---
-- import_playbook: roles/base/tests/test.yml
-- import_playbook: roles/user_core/tests/test.yml
-- import_playbook: roles/sdr/tests/test.yml
-- import_playbook: roles/meshtastic/tests/test.yml
-- import_playbook: roles/printing_3d/tests/test.yml
-- import_playbook: roles/reform/tests/test.yml
-- import_playbook: roles/amateur_radio/tests/test.yml
+- import_playbook: roles/base/tests/test.yml  # noqa: name[play]
+- import_playbook: roles/user_core/tests/test.yml  # noqa: name[play]
+- import_playbook: roles/sdr/tests/test.yml  # noqa: name[play]
+- import_playbook: roles/meshtastic/tests/test.yml  # noqa: name[play]
+- import_playbook: roles/printing_3d/tests/test.yml  # noqa: name[play]
+- import_playbook: roles/reform/tests/test.yml  # noqa: name[play]
+- import_playbook: roles/amateur_radio/tests/test.yml  # noqa: name[play]

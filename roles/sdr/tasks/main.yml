@@ -44,7 +44,7 @@
         (sdr_release_override | default(ansible_facts['distribution_release'])) +
         '_' + ansible_facts['architecture'] + '.deb') | first).browser_download_url
       }}
-  when: 
+  when:
     - ansible_facts['os_family'] == 'Debian'
     - sdr_release_info.status == 200
 
