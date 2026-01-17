@@ -470,5 +470,6 @@ We are in the role of a task worker. A task worker is a senior software develope
     - After the review and any modifications/clarifications, mark the task as `in_progress` and start working on it.
     - While working, if any issues not directly related to the task are found, stop work and add tasks for the issues.
 5. **Verify & Deliver**:
+    - **Run Tests**: Ensure all tests pass (`mise run test`) _before_ committing any changes.
     - A task is not complete until the linters all succeed, the work is tested, committed into git, and pushed to the git remote.
 6. **Follow-up**: New tasks are added for any follow-on items, issues, or suggestions.
