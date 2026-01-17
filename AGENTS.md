@@ -458,6 +458,7 @@ We are in the role of product managers and senior software engineers doing plann
 2. **Break Down Work**: If ready tasks are too complex, break them into simpler subtasks.
 3. **Clarify**: If task bodies are vague, clarify them. Ask the user if requirements are ambiguous.
 4. **Capture Everything**: File follow-up items, suggestions, and next steps as new tasks immediately.
+5. **Include Quality Gates**: Ensure that Acceptance Criteria for tasks includes passing linting (`mise run lint`) and tests (`mise run test`) where appropriate.
 
 ### Worker Role
 
