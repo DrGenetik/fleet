@@ -10,3 +10,40 @@
     - "{{ ansible_facts.system }}"
     - "{{ ansible_facts.os_family }}"
     - "{{ ansible_facts.distribution }}"
+
+- name: "User Core | Ensure User Exists"
+  ansible.builtin.user:
+    name: "{{ user_name }}"
+    shell: "{{ user_core_shell }}"
+    groups: "{{ user_core_groups }}"
+    append: true
+  become: true
+
+- name: "User Core | Install mise"
+  become: true
+  become_user: "{{ user_name }}"
+  ansible.builtin.shell: |
+    set -o pipefail
+    curl https://mise.run | sh
+  args:
+    chdir: "{{ user_core_home_directory }}"
+    creates: "{{ user_core_home_directory }}/.local/bin/mise"
+    executable: /bin/bash
+
+- name: "User Core | Install and configure chezmoi with mise"
+  become: true
+  become_user: "{{ user_name }}"
+  ansible.builtin.command:
+    chdir: "{{ user_core_home_directory }}"
+    cmd: ".local/bin/mise use --global chezmoi"
+    creates: "{{ user_core_home_directory }}/.local/share/mise/installs/chezmoi"
+
+- name: "User Core | Init dotfiles"
+  become: true
+  become_user: "{{ user_name }}"
+  ansible.builtin.command:
+    chdir: "{{ user_core_home_directory }}"
+    cmd: ".local/bin/mise x -- chezmoi init DrGenetik"
+    creates: "{{ user_core_home_directory }}/.local/share/chezmoi/.git"
+  environment:
+    GITHUB_TOKEN: "{{ github_token }}"
