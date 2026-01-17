@@ -38,16 +38,16 @@ run = "markdownlint ."
 run = "bd lint"
 
 [tasks."secrets:view"]
-description = "View vaulted secrets"
-run = "ansible-vault view group_vars/all/secrets.yml"
+description = "View vaulted secrets (deprecated)"
+run = "echo 'secrets.yml has been removed. Use 1Password for secret management.'"
 
 [tasks."secrets:edit"]
-description = "Edit vaulted secrets"
-run = "ansible-vault edit group_vars/all/secrets.yml"
+description = "Edit vaulted secrets (deprecated)"
+run = "echo 'secrets.yml has been removed. Use 1Password for secret management.'"
 
 [tasks."secrets:rekey"]
-description = "Rekey the vault with a new password"
-run = "ansible-vault rekey group_vars/all/secrets.yml"
+description = "Rekey the vault (deprecated)"
+run = "echo 'secrets.yml has been removed. Use 1Password for secret management.'"
 
 [tasks.test]
 description = "Run tests for base role (dry-run)"
