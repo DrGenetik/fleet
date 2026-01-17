@@ -111,8 +111,9 @@ If you need to bypass mise or run on remote hosts:
   - `[laptop]`: rincewind, dresden
   - `[workstation]`: jareth, constantine
   - `[server]`: minecraft
-- **`roles/`**: Six roles total:
-  - `base`: Common configuration (packages, user setup, `mise` installation, `chezmoi` for dotfiles)
+- **`roles/`**: Seven roles total:
+  - `base`: Common system configuration (packages, firewall, sshd, zerotier)
+  - `user_core`: User configuration (user creation, `mise` installation, `chezmoi` for dotfiles)
   - `printing_3d`: 3D printing tools and configuration
   - `sdr`: Software Defined Radio tools (hamradio-sdr, SDR++)
   - `meshtastic`: Meshtastic radio configuration
