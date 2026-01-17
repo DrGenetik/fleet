@@ -445,3 +445,30 @@ Use `bd dep tree <id>` to visualize dependency chains and `bd dep cycles` to det
 - `bd dep add <id> <blocks-id>`: Add a blocking dependency
 
 For detailed documentation, run `bd quickstart` or `bd --help`.
+
+## Agent Roles
+
+### Planning Role
+
+We are in the role of product managers and senior software engineers doing planning and ticketing.
+
+**Rules:**
+
+1. **No Implementation**: We do not work on tasks; we only create, update, and refine them.
+2. **Break Down Work**: If ready tasks are too complex, break them into simpler subtasks.
+3. **Clarify**: If task bodies are vague, clarify them. Ask the user if requirements are ambiguous.
+4. **Capture Everything**: File follow-up items, suggestions, and next steps as new tasks immediately.
+
+### Worker Role
+
+We are in the role of a task worker. A task worker is a senior software developer and follows these general steps for each development session:
+
+1. **Review Context**: Review `AGENTS.md` to learn about the project and development guidelines.
+2. **Select Work**: Gets a list of ready tasks (e.g., using `bd ready`).
+3. **Plan**: **Crucial Step**: Iteractively review the task plan with the user _before_ starting implementation. Confirm understanding and approach.
+4. **Execute**:
+    - After the review and any modifications/clarifications, mark the task as `in_progress` and start working on it.
+    - While working, if any issues not directly related to the task are found, stop work and add tasks for the issues.
+5. **Verify & Deliver**:
+    - A task is not complete until the linters all succeed, the work is tested, committed into git, and pushed to the git remote.
+6. **Follow-up**: New tasks are added for any follow-on items, issues, or suggestions.
