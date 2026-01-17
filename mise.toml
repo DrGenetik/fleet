@@ -25,14 +25,17 @@ description = "List ansible facts"
 run = "ansible \"$(hostname)\" -c local -m setup"
 
 [tasks.lint]
-description = "Run linters (ansible-lint, markdownlint)"
-depends = ["lint:ansible", "lint:markdown"]
+description = "Run linters (ansible-lint, markdownlint, bd lint)"
+depends = ["lint:ansible", "lint:markdown", "lint:beads"]
 
 [tasks."lint:ansible"]
 run = "ansible-lint"
 
 [tasks."lint:markdown"]
 run = "markdownlint ."
+
+[tasks."lint:beads"]
+run = "bd lint"
 
 [tasks."secrets:view"]
 description = "View vaulted secrets"
