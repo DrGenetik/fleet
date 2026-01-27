@@ -10,10 +10,6 @@
       "type": "stdio",
       "command": "mcp-server-github"
     },
-    "todoist": {
-      "type": "stdio",
-      "command": "todoist-ai"
-    },
     "beads": {
       "type": "stdio",
       "command": "beads-mcp"
