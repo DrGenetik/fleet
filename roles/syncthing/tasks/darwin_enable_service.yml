@@ -1,0 +1,8 @@
+# Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
+---
+- name: "Syncthing | Enable and Start Service (Darwin)"
+  community.general.launchd:
+    name: homebrew.mxcl.syncthing
+    state: started
+    enabled: true
+  become: true
