@@ -9,3 +9,4 @@
     enabled: true
     scope: user
   become: true
+  when: not ansible_check_mode
