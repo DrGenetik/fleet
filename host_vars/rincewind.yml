@@ -4,4 +4,5 @@ roles_to_run:
   - meshtastic
   - reform
   - sdr
+  - syncthing
 sdr_release_override: sid
