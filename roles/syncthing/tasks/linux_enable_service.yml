@@ -1,10 +1,11 @@
 # Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
 ---
-# handlers file for syncthing
+# Linux-specific tasks for enabling syncthing service
 
-- name: Restart syncthing service
+- name: "Syncthing | Enable and Start Service (Linux)"
   ansible.builtin.systemd:
     name: "syncthing@{{ user_name }}.service"
-    state: restarted
+    state: started
+    enabled: true
     scope: user
   become: true
