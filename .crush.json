@@ -9,10 +9,6 @@
     "github": {
       "type": "stdio",
       "command": "mcp-server-github"
-    },
-    "beads": {
-      "type": "stdio",
-      "command": "beads-mcp"
     }
   }
 }
