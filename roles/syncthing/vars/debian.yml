@@ -1,0 +1,7 @@
+# Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
+---
+# Debian-specific variables for syncthing role
+
+syncthing_package_names:
+  - syncthing
+  - syncthingtray
