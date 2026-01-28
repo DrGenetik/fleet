@@ -1,0 +1,9 @@
+# Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
+---
+- name: "Syncthing | Install Packages (Linux)"
+  ansible.builtin.apt:
+    name: "{{ syncthing_package_names }}"
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+  become: true
