@@ -8,3 +8,9 @@
     state: restarted
     scope: user
   become: true
+
+- name: Restart syncthing service (Darwin)
+  community.general.launchd:
+    name: homebrew.mxcl.syncthing
+    state: restarted
+  become: true
