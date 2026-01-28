@@ -459,7 +459,9 @@ We are in the role of product managers and senior software engineers doing plann
 2. **Break Down Work**: If ready tasks are too complex, break them into simpler subtasks.
 3. **Clarify**: If task bodies are vague, clarify them. Ask the user if requirements are ambiguous.
 4. **Capture Everything**: File follow-up items, suggestions, and next steps as new tasks immediately.
-5. **Include Quality Gates**: Ensure that Acceptance Criteria for tasks includes passing linting (`mise run lint`) and tests (`mise run test`) where appropriate.
+5. **Include Quality Gates**: Ensure that Acceptance Criteria for tasks ALWAYS includes:
+    - `mise run lint` passes (for all tasks with code or documentation changes)
+    - `mise run test` passes (for all tasks with code changes)
 
 ### Worker Role
 
@@ -472,6 +474,8 @@ We are in the role of a task worker. A task worker is a senior software develope
     - After the review and any modifications/clarifications, mark the task as `in_progress` and start working on it.
     - While working, if any issues not directly related to the task are found, stop work and add tasks for the issues.
 5. **Verify & Deliver**:
-    - **Run Tests**: Ensure all tests pass (`mise run test`) _before_ committing any changes.
-    - A task is not complete until the linters all succeed, the work is tested, committed into git, and pushed to the git remote.
+    - **Run Quality Gates**: Ensure all quality gates pass _before_ committing any changes:
+        - Run linting: `mise run lint` (checks code style, documentation, beads integrity)
+        - Run tests: `mise run test` (validates playbook functionality)
+    - A task is not complete until linting passes (`mise run lint`), tests pass (`mise run test`), work is committed to git, and pushed to the git remote.
 6. **Follow-up**: New tasks are added for any follow-on items, issues, or suggestions.
