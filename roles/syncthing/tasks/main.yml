@@ -1,3 +1,18 @@
 # Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
 ---
 # tasks file for syncthing
+
+- name: "Syncthing | Load OS Specific Variables"
+  ansible.builtin.include_vars:
+    dir: vars
+    files_matching: "{{ item | lower }}.yml"
+  loop:
+    - "{{ ansible_facts.system }}"
+    - "{{ ansible_facts.os_family }}"
+    - "{{ ansible_facts.distribution }}"
+
+- name: "Syncthing | Install Packages"
+  ansible.builtin.include_tasks: "{{ ansible_facts.system | lower }}_install_packages.yml"
+
+- name: "Syncthing | Enable and Start Service"
+  ansible.builtin.include_tasks: "{{ ansible_facts.system | lower }}_enable_service.yml"
