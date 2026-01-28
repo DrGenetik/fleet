@@ -3,5 +3,8 @@
 - name: Test sdr role
   hosts: localhost
   remote_user: root
+  vars:
+    # Override release for Debian testing (which doesn't have SDR++ artifacts)
+    sdr_release_override: "{{ 'sid' if ansible_facts['distribution_release'] in ['forky', 'trixie'] else omit }}"
   roles:
     - sdr

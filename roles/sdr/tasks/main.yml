@@ -35,18 +35,39 @@
   check_mode: false
   when: ansible_facts['os_family'] == 'Debian'
 
-- name: "SDR++ | Set download URL fact"
+- name: "SDR++ | Find matching Debian package asset"
   ansible.builtin.set_fact:
-    sdr_sdrplusplus_url: >-
+    sdr_matching_assets: >-
       {{
-        (sdr_release_info.json.assets |
+        sdr_release_info.json.assets |
         selectattr('name', 'equalto', 'sdrpp_debian_' +
         (sdr_release_override | default(ansible_facts['distribution_release'])) +
-        '_' + ansible_facts['architecture'] + '.deb') | first).browser_download_url
+        '_' + ansible_facts['architecture'] + '.deb') | list
       }}
   when:
     - ansible_facts['os_family'] == 'Debian'
     - sdr_release_info.status == 200
+
+- name: "SDR++ | Fail if no matching package found"
+  ansible.builtin.fail:
+    msg: >
+      No SDR++ package found for release '{{ sdr_release_override | default(ansible_facts['distribution_release']) }}'
+      and architecture '{{ ansible_facts['architecture'] }}'.
+      Available assets: {{ sdr_release_info.json.assets | map(attribute='name') | list | join(', ') }}.
+      If you are running Debian testing or an unsupported release, set the 'sdr_release_override' variable
+      to a supported release (e.g., 'sid', 'bookworm', 'bullseye') in your host_vars file.
+  when:
+    - ansible_facts['os_family'] == 'Debian'
+    - sdr_release_info.status == 200
+    - sdr_matching_assets | length == 0
+
+- name: "SDR++ | Set download URL fact"
+  ansible.builtin.set_fact:
+    sdr_sdrplusplus_url: "{{ sdr_matching_assets[0].browser_download_url }}"
+  when:
+    - ansible_facts['os_family'] == 'Debian'
+    - sdr_release_info.status == 200
+    - sdr_matching_assets | length > 0
 
 # todo: does this file need to be cleaned up after the play
 # todo: is there a better way to save a temp file during an ansible play
