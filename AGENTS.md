@@ -284,7 +284,7 @@ The base role automatically populates `/etc/hosts` with ZeroTier network member 
 1. Clones [zerotier-scripts](https://github.com/KimTholstorf/zerotier-scripts) to `/usr/local/src/zerotier-scripts`
 2. Installs `getnetworkmembers` script as `/usr/local/bin/zerotier-gethosts`
 3. Queries ZeroTier Central API for network members using your API token
-4. Creates entries like `198.51.100.193 nas-server.example_network.zt synology`
+4. Creates entries like `198.51.100.193 nas-server.example_network.zt` (FQDN only)
 5. Injects entries into `/etc/hosts` using Ansible's `blockinfile` module with marker comments
 
 **Configuration variables:**
@@ -303,15 +303,15 @@ The base role automatically populates `/etc/hosts` with ZeroTier network member 
 
 ```
 # BEGIN ANSIBLE MANAGED BLOCK - ZeroTier Peers
-198.51.100.102     workstation1.example_network.zt jareth
-198.51.100.204     laptop1.example_network.zt rincewind
-198.51.100.206     workstation2.example_network.zt constantine
-198.51.100.86      server1.example_network.zt minecraft
-198.51.100.193     nas-server.example_network.zt synology
+198.51.100.102     workstation1.example_network.zt
+198.51.100.204     laptop1.example_network.zt
+198.51.100.206     workstation2.example_network.zt
+198.51.100.86      server1.example_network.zt
+198.51.100.193     nas-server.example_network.zt
 # END ANSIBLE MANAGED BLOCK - ZeroTier Peers
 ```
 
-This enables you to connect to peers using short hostnames: `ssh synology` or `ping jareth.zt`
+This enables you to connect to peers using their FQDN: `ssh nas-server.example_network.zt` or `ping workstation1.example_network.zt`
 
 ### Working with Secrets
 
