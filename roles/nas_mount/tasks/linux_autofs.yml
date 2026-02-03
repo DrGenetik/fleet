@@ -1,0 +1,54 @@
+# Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
+---
+# Linux-specific autofs configuration for NAS mount
+
+- name: "NAS Mount | Linux | Install Required Packages"
+  ansible.builtin.apt:
+    name: "{{ nas_mount_packages }}"
+    state: present
+    update_cache: true
+  become: true
+  when: ansible_facts['pkg_mgr'] == 'apt'
+
+- name: "NAS Mount | Linux | Install Required Packages (pacman)"
+  community.general.pacman:
+    name: "{{ nas_mount_packages }}"
+    state: present
+  become: true
+  when: ansible_facts['pkg_mgr'] == 'pacman'
+
+- name: "NAS Mount | Linux | Create Mount Point Directory"
+  ansible.builtin.file:
+    path: "{{ nas_mount_point }}"
+    state: directory
+    mode: '0755'
+    owner: "{{ nas_mount_user }}"
+    group: "{{ nas_mount_group }}"
+  become: true
+
+- name: "NAS Mount | Linux | Create Autofs Master Entry"
+  ansible.builtin.template:
+    src: synology.autofs.j2
+    dest: "{{ nas_mount_autofs_master_map }}"
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  notify: Restart autofs
+
+- name: "NAS Mount | Linux | Create Autofs Map File"
+  ansible.builtin.template:
+    src: auto.synology.j2
+    dest: "{{ nas_mount_autofs_map_file }}"
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  notify: Restart autofs
+
+- name: "NAS Mount | Linux | Enable and Start Autofs Service"
+  ansible.builtin.systemd:
+    name: autofs
+    enabled: true
+    state: started
+  become: true

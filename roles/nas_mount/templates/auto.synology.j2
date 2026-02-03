@@ -1,0 +1,13 @@
+# Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
+# Autofs map file for Synology NAS mounts
+#
+# This file is managed by Ansible - manual changes will be overwritten
+#
+# Format: <mount-point-name>  <mount-options>  <server>:<share-path>
+#
+# NAS Hostname: {{ nas_mount_hostname }}
+# Share Path: {{ nas_mount_share_path }}
+# Protocol: {{ nas_mount_protocol | upper }}{% if nas_mount_protocol == 'nfs' %} v{{ nas_mount_nfs_version }}{% endif %}
+
+# Mount: {{ nas_mount_point }}
+{{ nas_mount_point | basename }}  -fstype={{ nas_mount_protocol }},{{ nas_mount_nfs_options }}{% if nas_mount_protocol == 'nfs' %},nfsvers={{ nas_mount_nfs_version }}{% endif %}  {{ nas_mount_hostname }}:{{ nas_mount_share_path }}

@@ -1,0 +1,7 @@
+# Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
+---
+# Debian/Ubuntu specific variables for nas_mount role
+
+nas_mount_packages:
+  - nfs-common
+  - autofs

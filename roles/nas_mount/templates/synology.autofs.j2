@@ -1,0 +1,10 @@
+# Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
+# Autofs master map entry for Synology NAS
+#
+# This file is managed by Ansible - manual changes will be overwritten
+#
+# Mount point: {{ nas_mount_point | dirname }}
+# Map file: {{ nas_mount_autofs_map_file }}
+# Timeout: {{ nas_mount_autofs_timeout }} seconds
+
+{{ nas_mount_point | dirname }}  {{ nas_mount_autofs_map_file }}  --timeout={{ nas_mount_autofs_timeout }}

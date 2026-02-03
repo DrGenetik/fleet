@@ -1,0 +1,37 @@
+# Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
+---
+# Darwin (macOS) specific autofs configuration for NAS mount
+
+- name: "NAS Mount | Darwin | Create Mount Point Directory"
+  ansible.builtin.file:
+    path: "{{ nas_mount_point }}"
+    state: directory
+    mode: '0755'
+    owner: "{{ nas_mount_user }}"
+    group: "{{ nas_mount_group }}"
+  become: true
+
+- name: "NAS Mount | Darwin | Create Autofs Map File"
+  ansible.builtin.template:
+    src: auto.synology.j2
+    dest: "{{ nas_mount_autofs_map_file }}"
+    owner: root
+    group: wheel
+    mode: '0644'
+  become: true
+  notify: Restart autofs Darwin
+
+- name: "NAS Mount | Darwin | Add Entry to auto_master"
+  ansible.builtin.lineinfile:
+    path: "{{ nas_mount_autofs_master_map }}"
+    line: "{{ nas_mount_point | dirname }}  {{ nas_mount_autofs_map_file }}"
+    state: present
+    create: false
+  become: true
+  notify: Restart autofs Darwin
+
+- name: "NAS Mount | Darwin | Enable autofs"
+  ansible.builtin.command:
+    cmd: automount -vc
+  become: true
+  changed_when: false

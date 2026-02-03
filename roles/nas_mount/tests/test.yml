@@ -1,0 +1,11 @@
+# Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
+---
+# Test playbook for nas_mount role
+
+- name: Test nas_mount role
+  hosts: localhost
+  connection: local
+  become: false
+
+  roles:
+    - role: nas_mount

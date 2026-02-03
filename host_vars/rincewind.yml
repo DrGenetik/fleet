@@ -5,4 +5,5 @@ roles_to_run:
   - reform
   - sdr
   - syncthing
+  - nas_mount
 sdr_release_override: sid

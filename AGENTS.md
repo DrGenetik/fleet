@@ -301,7 +301,7 @@ The base role automatically populates `/etc/hosts` with ZeroTier network member 
 
 **Example /etc/hosts entries:**
 
-```
+```text
 # BEGIN ANSIBLE MANAGED BLOCK - ZeroTier Peers
 198.51.100.102     workstation1.example_network.zt
 198.51.100.204     laptop1.example_network.zt
@@ -312,6 +312,69 @@ The base role automatically populates `/etc/hosts` with ZeroTier network member 
 ```
 
 This enables you to connect to peers using their FQDN: `ssh nas-server.example_network.zt` or `ping workstation1.example_network.zt`
+
+### NAS Auto-Mount (fleet-422)
+
+**Status:** Implemented (fleet-422.7, fleet-422.3)  
+**Role:** nas_mount  
+**Protocol:** NFSv4.1 via autofs
+
+#### Configuration
+
+- **NAS Hostname:** nas-server.example_network.zt (from ZeroTier discovery)
+- **Share:** /volume1/Public → /media/synology/public
+- **Mount Type:** On-demand (autofs)
+- **Auto-unmount:** 300 seconds (5 minutes) after last access
+- **Mount Options:** rw,hard,intr,nosuid,timeo=600,retrans=2,nfsvers=4.1,_netdev
+
+#### Features
+
+- No credentials required (NFS UID/GID mapping)
+- Tolerates network interruptions (hard mount with interrupt)
+- No boot delays (mounts on first access)
+- Works over ZeroTier VPN
+- Auto-unmounts after idle timeout (resource efficient)
+
+#### Usage
+
+Mount triggers automatically on first access:
+
+```bash
+# Access the share
+ls /media/synology/public
+
+# Files become available
+cd /media/synology/public
+```
+
+#### Target Hosts
+
+- **Laptops:** rincewind (tested, working), dresden (pending)
+- **Workstations:** jareth (pending), constantine (pending)
+
+#### Dependencies
+
+- fleet-6o5: ZeroTier peer discovery (provides hostname resolution)
+- fleet-422.13: Synology NFS export permissions (198.51.100.0/24 subnet allowed)
+
+#### Troubleshooting
+
+**Mount not appearing:**
+
+```bash
+# Check autofs service
+systemctl status autofs  # Linux
+automount -v              # macOS
+
+# Check logs
+journalctl -u autofs -n 50  # Linux
+```
+
+**Permission denied on write:**
+
+- NFS uses UID/GID mapping from NAS
+- Files owned by UID 1026 on NAS require matching UID locally
+- Check file ownership: `ls -ln /media/synology/public`
 
 ### Working with Secrets
 

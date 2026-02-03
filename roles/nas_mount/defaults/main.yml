@@ -1,0 +1,24 @@
+# Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
+---
+# Default variables for nas_mount role
+
+# NAS connection settings (hostname from ZeroTier discovery in fleet-6o5)
+nas_mount_hostname: "nas-server.example_network.zt"
+nas_mount_share_path: "/volume1/Public"
+nas_mount_point: "/media/synology/public"
+
+# NFS protocol settings
+nas_mount_protocol: "nfs"
+nas_mount_nfs_version: "4.1"
+
+# NFS mount options (recommended from fleet-422.1 research)
+nas_mount_nfs_options: "rw,hard,intr,nosuid,timeo=600,retrans=2,_netdev"
+
+# Autofs settings
+nas_mount_autofs_timeout: 300  # 5 minutes idle before auto-unmount
+nas_mount_autofs_master_map: "/etc/auto.master.d/synology.autofs"
+nas_mount_autofs_map_file: "/etc/auto.synology"
+
+# User and group for mount access
+nas_mount_user: "{{ user_name | default('kayos') }}"
+nas_mount_group: "{{ user_name | default('kayos') }}"

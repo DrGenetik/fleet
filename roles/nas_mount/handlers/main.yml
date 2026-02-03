@@ -1,0 +1,17 @@
+# Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
+---
+# Handlers for nas_mount role
+
+- name: Restart autofs
+  ansible.builtin.systemd:
+    name: autofs
+    state: restarted
+  become: true
+  listen: Restart autofs
+
+- name: Restart autofs Darwin
+  ansible.builtin.command:
+    cmd: automount -vc
+  become: true
+  changed_when: false
+  listen: Restart autofs Darwin

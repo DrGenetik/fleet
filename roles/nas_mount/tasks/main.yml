@@ -1,0 +1,13 @@
+# Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
+---
+- name: "NAS Mount | Load OS Specific Variables"
+  ansible.builtin.include_vars:
+    dir: vars
+    files_matching: "{{ item | lower }}.yml"
+  loop:
+    - "{{ ansible_facts.system }}"
+    - "{{ ansible_facts.os_family }}"
+    - "{{ ansible_facts.distribution }}"
+
+- name: "NAS Mount | Include platform-specific autofs setup"
+  ansible.builtin.include_tasks: "{{ ansible_facts.system | lower }}_autofs.yml"

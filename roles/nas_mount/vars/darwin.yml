@@ -1,0 +1,10 @@
+# Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
+---
+# Darwin (macOS) specific variables for nas_mount role
+
+# macOS has NFS built-in, autofs requires different configuration
+nas_mount_packages: []  # No packages needed on macOS
+
+# macOS autofs configuration paths
+nas_mount_autofs_master_map: "/etc/auto_master"
+nas_mount_autofs_map_file: "/etc/auto_synology"
