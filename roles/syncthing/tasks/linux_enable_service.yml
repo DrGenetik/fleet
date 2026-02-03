@@ -4,9 +4,10 @@
 
 - name: "Syncthing | Enable and Start Service (Linux)"
   ansible.builtin.systemd:
-    name: "syncthing@{{ user_name }}.service"
+    name: syncthing.service
     state: started
     enabled: true
     scope: user
   become: true
+  become_user: "{{ user_name }}"
   when: not ansible_check_mode

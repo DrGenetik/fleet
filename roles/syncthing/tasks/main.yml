@@ -5,11 +5,13 @@
 - name: "Syncthing | Load OS Specific Variables"
   ansible.builtin.include_vars:
     dir: vars
-    files_matching: "{{ item | lower }}.yml"
+    files_matching: "{{ var_file | lower }}.yml"
   loop:
     - "{{ ansible_facts.system }}"
     - "{{ ansible_facts.os_family }}"
     - "{{ ansible_facts.distribution }}"
+  loop_control:
+    loop_var: var_file
 
 - name: "Syncthing | Install Packages"
   ansible.builtin.include_tasks: "{{ ansible_facts.system | lower }}_install_packages.yml"
