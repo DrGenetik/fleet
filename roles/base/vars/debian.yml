@@ -3,6 +3,7 @@ base_package_names:
   - build-essential
   - curl
   - git
+  - jq
   - zsh
 
 base_sshd_package_names:

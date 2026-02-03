@@ -275,6 +275,44 @@ Categories of packages:
 - `base_user_shell_package_names`: Shell-related packages
 - `base_user_groups`: Groups to add the user to
 
+### ZeroTier Peer Discovery
+
+The base role automatically populates `/etc/hosts` with ZeroTier network member hostnames on every Ansible run:
+
+**How it works:**
+
+1. Clones [zerotier-scripts](https://github.com/KimTholstorf/zerotier-scripts) to `/usr/local/src/zerotier-scripts`
+2. Installs `getnetworkmembers` script as `/usr/local/bin/zerotier-gethosts`
+3. Queries ZeroTier Central API for network members using your API token
+4. Creates entries like `198.51.100.193 nas-server.example_network.zt synology`
+5. Injects entries into `/etc/hosts` using Ansible's `blockinfile` module with marker comments
+
+**Configuration variables:**
+
+- `zerotier_api_token`: Retrieved from 1Password at `ServiceAccountAccess/Fleet ZeroTier Network ID/credential`
+- `zerotier_network_id`: Retrieved from 1Password at `ServiceAccountAccess/Fleet ZeroTier Network ID/network_id`
+- `zerotier_domain_suffix`: Default `zt`, creates FQDNs like `synology.zt`
+
+**Prerequisites:**
+
+- ZeroTier API token must be stored in 1Password
+- Dependencies `curl` and `jq` are automatically installed by the base role
+- Only runs on Linux hosts (no Darwin implementation currently)
+
+**Example /etc/hosts entries:**
+
+```
+# BEGIN ANSIBLE MANAGED BLOCK - ZeroTier Peers
+198.51.100.102     workstation1.example_network.zt jareth
+198.51.100.204     laptop1.example_network.zt rincewind
+198.51.100.206     workstation2.example_network.zt constantine
+198.51.100.86      server1.example_network.zt minecraft
+198.51.100.193     nas-server.example_network.zt synology
+# END ANSIBLE MANAGED BLOCK - ZeroTier Peers
+```
+
+This enables you to connect to peers using short hostnames: `ssh synology` or `ping jareth.zt`
+
 ### Working with Secrets
 
 View encrypted secrets:

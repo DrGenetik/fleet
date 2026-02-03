@@ -1,0 +1,54 @@
+# Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
+---
+- name: "System | Clone zerotier-scripts repository"
+  ansible.builtin.git:
+    repo: "https://github.com/KimTholstorf/zerotier-scripts.git"
+    dest: "/usr/local/src/zerotier-scripts"
+    version: "master"
+    update: true
+  become: true
+  check_mode: false
+
+- name: "System | Install getnetworkmembers script"
+  ansible.builtin.copy:
+    src: "/usr/local/src/zerotier-scripts/getnetworkmembers"
+    dest: "/usr/local/bin/zerotier-gethosts"
+    mode: "0755"
+    remote_src: true
+  become: true
+  check_mode: false
+
+- name: "System | Query ZeroTier API for network members"
+  ansible.builtin.command:
+    cmd: >
+      /usr/local/bin/zerotier-gethosts
+      --api={{ zerotier_api_token }}
+      --network={{ zerotier_network_id }}
+      --tld={{ zerotier_domain_suffix }}
+      --output=/tmp/zerotier-hosts
+      --silent=true
+  changed_when: false
+  become: true
+  check_mode: false
+
+- name: "System | Read generated ZeroTier hosts entries"
+  ansible.builtin.slurp:
+    src: "/tmp/zerotier-hosts"
+  register: base_zerotier_hosts_content
+  become: true
+  check_mode: false
+
+- name: "System | Update /etc/hosts with ZeroTier peers"
+  ansible.builtin.blockinfile:
+    path: "/etc/hosts"
+    block: "{{ base_zerotier_hosts_content['content'] | b64decode }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - ZeroTier Peers"
+    create: false
+    backup: true
+  become: true
+
+- name: "System | Clean up temporary hosts file"
+  ansible.builtin.file:
+    path: "/tmp/zerotier-hosts"
+    state: absent
+  become: true

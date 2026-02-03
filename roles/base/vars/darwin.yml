@@ -1,4 +1,5 @@
 base_package_names:
   - ansible
   - git
+  - jq
   - zerotier-one

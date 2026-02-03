@@ -1,3 +1,5 @@
 user_name: kayos
 github_token: "{{ lookup('community.general.onepassword', '36a325oeo5nl7vg6rhdfu5p56q', vault='ServiceAccountAccess', field='token') }}"
 zerotier_network_id: "{{ lookup('community.general.onepassword', 'lkfcqg5neo6l47l2wqrz6nyhie', vault='ServiceAccountAccess', field='network_id') }}"
+zerotier_api_token: "{{ lookup('community.general.onepassword', 'lkfcqg5neo6l47l2wqrz6nyhie', vault='ServiceAccountAccess', field='credential') }}"
+zerotier_domain_suffix: zt
