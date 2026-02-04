@@ -46,6 +46,33 @@
   become: true
   notify: Restart autofs
 
+- name: "NAS Mount | Linux | Create Systemd Drop-in Directory"
+  ansible.builtin.file:
+    path: /etc/systemd/system/autofs.service.d
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+  become: true
+
+- name: "NAS Mount | Linux | Configure Autofs Dependency on ZeroTier"
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/autofs.service.d/override.conf
+    content: |
+      [Unit]
+      After=zerotier-one.service
+      Wants=zerotier-one.service
+    mode: '0644'
+    owner: root
+    group: root
+  become: true
+  notify: Restart autofs
+
+- name: "NAS Mount | Linux | Reload Systemd Daemon"
+  ansible.builtin.systemd:
+    daemon_reload: true
+  become: true
+
 - name: "NAS Mount | Linux | Enable and Start Autofs Service"
   ansible.builtin.systemd:
     name: autofs
