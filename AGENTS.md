@@ -226,6 +226,91 @@ User dotfiles are managed via **[chezmoi](https://www.chezmoi.io/)**, installed 
   - `vault_password_file = .get_vault_password.sh`
   - `become_password_file = .get_become_password.sh`
 
+## Privacy & Security Best Practices
+
+### Sensitive Data Management
+
+**Never commit sensitive information** to the repository. This includes:
+
+- Private network names, hostnames, or domain suffixes
+- Private IP addresses or subnets (RFC 1918 ranges that could reveal network topology)
+- API keys, tokens, or credentials
+- Personal identifiable information
+
+**Store sensitive values in 1Password** and reference them via Ansible lookups:
+
+```yaml
+# group_vars/all/vars.yml
+zerotier_network_name: "{{ lookup('community.general.onepassword', 'item_id', vault='VaultName', field='field_name') }}"
+```
+
+**Use RFC 5737 test networks in documentation**:
+
+- `198.51.100.0/24` (TEST-NET-2) - Reserved for documentation and examples
+- `192.0.2.0/24` (TEST-NET-1) - Alternative documentation range
+- `203.0.113.0/24` (TEST-NET-3) - Another alternative
+
+**Use generic names in examples**:
+
+- Hostnames: `workstation1`, `laptop1`, `server1`, `nas-server`
+- Network names: `example_network`, `test_network`
+- Domain suffixes: `example_network.zt`, `test.local`
+
+### Removing Sensitive Data from Git History
+
+If sensitive data was previously committed, use `git-filter-repo` to rewrite history:
+
+1. **Install git-filter-repo**:
+
+   ```bash
+   mise use -g pipx:git-filter-repo
+   mise install
+   ```
+
+2. **Create backup**:
+
+   ```bash
+   git clone --mirror /path/to/repo /path/to/repo-backup.git
+   ```
+
+3. **Create replacement file** (`replacements.txt`):
+
+   ```text
+   sensitive_hostname.domain==>generic_hostname.example
+   192.168.1.0/24==>198.51.100.0/24
+   secret_name==>example_name
+   ```
+
+   **Order matters**: List longest strings first to avoid partial replacements.
+
+4. **Test on clone**:
+
+   ```bash
+   git clone /path/to/repo /tmp/repo-test
+   cd /tmp/repo-test
+   git-filter-repo --replace-text replacements.txt --force
+   git log --all -S "sensitive_data"  # Should return nothing
+   ```
+
+5. **Apply to production repo**:
+
+   ```bash
+   cd /path/to/repo
+   git-filter-repo --replace-text replacements.txt --force
+   git remote add origin <url>
+   git push --force --all
+   git push --force --tags
+   ```
+
+6. **Update all clones**:
+
+   ```bash
+   git fetch --all
+   git reset --hard origin/main
+   ```
+
+**⚠️ Warning**: This is a destructive operation. All collaborators must re-clone or reset their repositories after force push.
+
 ## Conventions & Gotchas
 
 - **Issue Tracking**: Always capture identified next steps as new tasks in the `beads` system (`bd create ...`). **Never leave next steps as comments in code** or just as text in responses.
