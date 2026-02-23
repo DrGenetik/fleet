@@ -4,9 +4,9 @@
 "npm:@modelcontextprotocol/server-github" = "latest"
 pipx = "latest"
 "pipx:ansible-lint" = "latest"
-"go:github.com/steveyegge/beads/cmd/bd" = "latest"
 github-cli = "latest"
 "pipx:beads-mcp" = "latest"
+"github:steveyegge/beads" = "v0.55.4"
 
 [tasks.install-collections]
 description = "Install ansible collections"
