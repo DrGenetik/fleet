@@ -60,3 +60,17 @@ sync-branch: "beads-sync"
 # - linear.api-key
 # - github.org
 # - github.repo
+
+sync.branch: "beads-sync"
+
+sync.mode: "git-portable"
+
+sync.export_on: "push"
+
+sync.import_on: "pull"
+
+create.require-description: true
+
+validation.on-create: true
+
+sync.require_confirmation_on_mass_delete: true
