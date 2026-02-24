@@ -5,6 +5,7 @@ localhost ansible_connection=local
 rincewind
 dresden
 caliban
+huginn
 
 [workstation]
 jareth
