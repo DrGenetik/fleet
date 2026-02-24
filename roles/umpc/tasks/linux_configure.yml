@@ -1,0 +1,30 @@
+---
+# Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
+
+- name: "UMPC | Configure GUI display scaling environment variables"
+  become: true
+  ansible.builtin.copy:
+    dest: "/etc/profile.d/umpc_scaling.sh"
+    content: |
+      # Ansible Managed - UMPC Scaling Profile
+      export GDK_SCALE={{ umpc_gui_scaling }}
+      export GDK_DPI_SCALE={{ umpc_gui_scaling }}
+      export QT_SCALE_FACTOR={{ umpc_gui_scaling }}
+      export XCURSOR_SIZE={{ umpc_cursor_size }}
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: "UMPC | Configure TTY font size"
+  become: true
+  ansible.builtin.lineinfile:
+    path: "/etc/default/console-setup"
+    regexp: "^{{ item.key }}="
+    line: "{{ item.key }}={{ item.value }}"
+    create: true
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  loop:
+    - { key: 'FONTFACE', value: '"{{ umpc_tty_font }}"' }
+    - { key: 'FONTSIZE', value: '"{{ umpc_tty_fontsize }}"' }

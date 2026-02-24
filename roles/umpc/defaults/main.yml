@@ -1,0 +1,5 @@
+---
+umpc_gui_scaling: "1.25"
+umpc_cursor_size: "32"
+umpc_tty_font: "Terminus"
+umpc_tty_fontsize: "10x20"

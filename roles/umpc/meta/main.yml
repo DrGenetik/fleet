@@ -1,0 +1,18 @@
+---
+galaxy_info:
+  author: "T.R. Fullhart"
+  description: "UMPC role for small-screen, low-performance devices"
+  company: "Personal"
+  license: "MIT"
+  min_ansible_version: "2.14"
+  platforms:
+    - name: Ubuntu
+      versions:
+        - focal
+        - jammy
+    - name: Debian
+      versions:
+        - bullseye
+        - bookworm
+  galaxy_tags: []
+dependencies: []

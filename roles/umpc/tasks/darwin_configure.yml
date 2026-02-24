@@ -1,0 +1,6 @@
+---
+# Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
+
+- name: "UMPC | macOS does not support umpc role yet"
+  ansible.builtin.debug:
+    msg: "UMPC role is currently Linux-only. Skipping for Darwin."
