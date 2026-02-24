@@ -1,6 +1,6 @@
 # Fleet Configuration
 
-This repository contains the Ansible configuration for managing the fleet of personal computers (laptops, workstations, servers).
+This repository contains the Ansible configuration for managing the fleet of personal computers (mobile, workstations, servers).
 
 ## 1. Bootstrapping with ansible-pull
 

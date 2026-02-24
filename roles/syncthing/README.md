@@ -4,7 +4,7 @@ Automatically install and configure Syncthing for continuous file synchronizatio
 
 ## Overview
 
-This role installs Syncthing daemon and GUI components on laptops and workstations. Syncthing provides decentralized, encrypted file synchronization without requiring a central server.
+This role installs Syncthing daemon and GUI components on mobile devices and workstations. Syncthing provides decentralized, encrypted file synchronization without requiring a central server.
 
 ## Supported Platforms
 
@@ -375,8 +375,8 @@ ssh rincewind 'curl -s http://localhost:8384 | grep -i syncthing'
 ### Syncing Documents
 
 ```yaml
-# Share ~/Documents between laptop and workstation
-# 1. On laptop: Add folder ~/Documents
+# Share ~/Documents between mobile device and workstation
+# 1. On mobile device: Add folder ~/Documents
 # 2. Share with workstation device ID
 # 3. On workstation: Accept folder share
 # 4. Files sync continuously
@@ -397,8 +397,8 @@ ssh rincewind 'curl -s http://localhost:8384 | grep -i syncthing'
 ### Photo Backup
 
 ```yaml
-# One-way sync from laptop to workstation
-# 1. Add ~/Pictures on laptop
+# One-way sync from mobile device to workstation
+# 1. Add ~/Pictures on mobile device
 # 2. Set folder type to "Send Only"
 # 3. Accept on workstation as "Receive Only"
 # 4. Photos backed up automatically

@@ -1,7 +1,7 @@
 [local]
 localhost ansible_connection=local
 
-[laptop]
+[mobile]
 rincewind
 dresden
 caliban

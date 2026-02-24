@@ -1,6 +1,6 @@
 # Codebase Context for Agents
 
-This is an Ansible configuration repository for managing a fleet of personal computers (laptops, workstations, servers). It automates system setup, package installation, and user configuration.
+This is an Ansible configuration repository for managing a fleet of personal computers (mobile, workstations, servers). It automates system setup, package installation, and user configuration.
 
 **Supported Operating Systems:**
 
@@ -108,7 +108,7 @@ If you need to bypass mise or run on remote hosts:
   4. Cleanup: Runs post-tasks (apt autoremove, autoclean)
 - **`hosts`**: Static inventory file defining groups:
   - `[local]`: localhost
-  - `[laptop]`: rincewind, dresden
+  - `[mobile]`: rincewind, dresden
   - `[workstation]`: jareth, constantine
   - `[server]`: minecraft
 - **`roles/`**: Seven roles total:
@@ -117,7 +117,7 @@ If you need to bypass mise or run on remote hosts:
   - `printing_3d`: 3D printing tools and configuration
   - `sdr`: Software Defined Radio tools (hamradio-sdr, SDR++)
   - `meshtastic`: Meshtastic radio configuration
-  - `reform`: MNT Reform laptop-specific configuration
+  - `reform`: MNT Reform mobile-specific configuration
   - `amateur_radio`: Amateur/ham radio tools
   - **Role Structure**: Standard Ansible structure (`tasks/main.yml`, `handlers/`, `defaults/main.yml`, `vars/`, `meta/`, `tests/`)
   - **Platform-Specific Tasks**: Roles use includes like `{{ ansible_facts.system | lower }}_install_packages.yml` to handle Linux vs Darwin differences
@@ -125,7 +125,7 @@ If you need to bypass mise or run on remote hosts:
   - `all/`: Global variables directory (not a file!)
     - `vars.yml`: Non-sensitive global variables (e.g., `user_name: kayos`)
     - `secrets.yml`: Vault-encrypted sensitive variables
-  - `laptop.yml`, `server.yml`, `workstation.yml`: Group-specific vars
+  - `mobile.yml`, `server.yml`, `workstation.yml`: Group-specific vars
 - **`host_vars/`**: Host-specific variables, primarily `roles_to_run` list
 - **`mise.toml`**: Task definitions and tool versions
 - **`requirements.yml`**: Ansible Galaxy collections (`community.general`)
@@ -252,7 +252,7 @@ zerotier_network_name: "{{ lookup('community.general.onepassword', 'item_id', va
 
 **Use generic names in examples**:
 
-- Hostnames: `workstation1`, `laptop1`, `server1`, `nas-server`
+- Hostnames: `workstation1`, `mobile1`, `server1`, `nas-server`
 - Network names: `example_network`, `test_network`
 - Domain suffixes: `example_network.zt`, `test.local`
 
@@ -389,7 +389,7 @@ The base role automatically populates `/etc/hosts` with ZeroTier network member 
 ```text
 # BEGIN ANSIBLE MANAGED BLOCK - ZeroTier Peers
 198.51.100.102     workstation1.example_network.zt
-198.51.100.204     laptop1.example_network.zt
+198.51.100.204     mobile1.example_network.zt
 198.51.100.206     workstation2.example_network.zt
 198.51.100.86      server1.example_network.zt
 198.51.100.193     nas-server.example_network.zt
@@ -434,7 +434,7 @@ cd /media/synology/public
 
 #### Target Hosts
 
-- **Laptops:** rincewind (tested, working), dresden (pending)
+- **Mobile:** rincewind (tested, working), dresden (pending)
 - **Workstations:** jareth (pending), constantine (pending)
 
 #### Dependencies
@@ -526,7 +526,7 @@ Host-specific overrides work via precedence (lowest to highest):
 1. `roles/<role>/defaults/main.yml` - Role defaults
 2. `roles/<role>/vars/<os>.yml` - OS-specific vars
 3. `group_vars/all/vars.yml` - Global vars
-4. `group_vars/<group>.yml` - Group vars (laptop, server, workstation)
+4. `group_vars/<group>.yml` - Group vars (mobile, server, workstation)
 5. `host_vars/<hostname>.yml` - Host-specific vars (highest priority)
 
 Example override:
