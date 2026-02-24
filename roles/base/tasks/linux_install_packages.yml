@@ -25,7 +25,10 @@
 
 - name: "System | Add ZeroTier Repository (Debian)"
   ansible.builtin.apt_repository:
-    repo: "deb [signed-by=/etc/apt/keyrings/zerotier.asc] http://download.zerotier.com/debian/{{ ansible_facts.distribution_release | lower }} {{ ansible_facts.distribution_release | lower }} main"
+    repo: >-
+      deb [signed-by=/etc/apt/keyrings/zerotier.asc]
+      http://download.zerotier.com/debian/{{ ansible_facts.distribution_release | lower }}
+      {{ ansible_facts.distribution_release | lower }} main
     state: present
     filename: "zerotier"
     update_cache: false
@@ -40,11 +43,11 @@
   when: ansible_facts.os_family == 'Debian'
   changed_when: false
   check_mode: false
-  ignore_errors: true
+  failed_when: false
 
 - name: "System | Install Base Packages (linux)"
   ansible.builtin.package:
     name: "{{ base_final_package_names }}"
     state: present
   become: true
-  ignore_errors: true
+  failed_when: false

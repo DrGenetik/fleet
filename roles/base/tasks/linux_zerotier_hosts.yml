@@ -8,6 +8,7 @@
     update: true
   become: true
   check_mode: false
+  when: not ansible_check_mode
 
 - name: "System | Install getnetworkmembers script"
   ansible.builtin.copy:
@@ -17,6 +18,7 @@
     remote_src: true
   become: true
   check_mode: false
+  when: not ansible_check_mode
 
 - name: "System | Query ZeroTier API for network members"
   ansible.builtin.command:
@@ -30,6 +32,7 @@
   changed_when: false
   become: true
   check_mode: false
+  when: not ansible_check_mode
 
 - name: "System | Read generated ZeroTier hosts entries"
   ansible.builtin.slurp:
@@ -37,6 +40,7 @@
   register: base_zerotier_hosts_content
   become: true
   check_mode: false
+  when: not ansible_check_mode
 
 - name: "System | Update /etc/hosts with ZeroTier peers"
   ansible.builtin.blockinfile:
@@ -46,9 +50,11 @@
     create: false
     backup: true
   become: true
+  when: not ansible_check_mode
 
 - name: "System | Clean up temporary hosts file"
   ansible.builtin.file:
     path: "/tmp/zerotier-hosts"
     state: absent
   become: true
+  when: not ansible_check_mode

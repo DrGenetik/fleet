@@ -38,7 +38,9 @@
     cmd: "zerotier-cli join {{ zerotier_network_id }}"
   become: true
   changed_when: false
-  when: "base_zerotier_networks is not failed and zerotier_network_id not in (base_zerotier_networks.stdout | default('[]') | from_json | map(attribute='nwid') | list)"
+  when: >-
+    base_zerotier_networks is not failed and
+    zerotier_network_id not in (base_zerotier_networks.stdout | default('[]') | from_json | map(attribute='nwid') | list)
 
 - name: "System | Setup ZeroTier hosts discovery"
   ansible.builtin.include_tasks: linux_zerotier_hosts.yml
