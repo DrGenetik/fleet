@@ -35,17 +35,22 @@
   check_mode: false
   when: ansible_facts['os_family'] == 'Debian'
 
-- name: "SDR++ | Find matching Debian package asset"
+- name: "SDR++ | Calculate target package name"
   ansible.builtin.set_fact:
-    sdr_matching_assets: >-
-      {{
-        sdr_release_info.json.assets |
-        selectattr('name', 'equalto', 'sdrpp_debian_' +
-        (sdr_release_override | default(ansible_facts['distribution_release'])) +
-        '_' + ansible_facts['architecture'] + '.deb') | list
-      }}
+    sdr_target_package: "sdrpp_debian_{{ rel }}_{{ ansible_facts['architecture'] }}.deb"
+  vars:
+    rel: "{{ sdr_release_override if (sdr_release_override | length > 0) else ansible_facts['distribution_release'] }}"
   when:
     - ansible_facts['os_family'] == 'Debian'
+    - sdr_release_info is defined
+    - sdr_release_info.status == 200
+
+- name: "SDR++ | Find matching Debian package asset"
+  ansible.builtin.set_fact:
+    sdr_matching_assets: "{{ sdr_release_info.json.assets | selectattr('name', 'equalto', sdr_target_package) | list }}"
+  when:
+    - ansible_facts['os_family'] == 'Debian'
+    - sdr_release_info is defined
     - sdr_release_info.status == 200
 
 - name: "SDR++ | Fail if no matching package found"
