@@ -1,0 +1,15 @@
+---
+# Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
+
+galaxy_info:
+  author: T.R. Fullhart
+  description: Configuration for cellular modem devices via ModemManager/NetworkManager
+  company: Fleet
+  license: All Rights Reserved
+  min_ansible_version: "2.9"
+  galaxy_tags:
+    - hardware
+    - modem
+    - network
+
+dependencies: []

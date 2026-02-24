@@ -1,0 +1,8 @@
+---
+# Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
+
+# macOS support for cellular modems is limited
+# Most cellular modems are Linux-based or require special drivers on macOS
+- name: "Cellular Modem | macOS configuration"
+  ansible.builtin.debug:
+    msg: "Cellular modem support on macOS requires device-specific drivers (typically not available for generic USB modems)"

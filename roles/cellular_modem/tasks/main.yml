@@ -1,0 +1,5 @@
+---
+# Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
+
+- name: "Cellular Modem | Apply platform-specific configuration"
+  ansible.builtin.include_tasks: "{{ ansible_facts.system | lower }}_configure.yml"

@@ -1,0 +1,49 @@
+---
+# Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
+
+# Install ModemManager and NetworkManager for cellular modem support
+- name: "Cellular Modem | Install ModemManager (Debian)"
+  ansible.builtin.apt:
+    name:
+      - modemmanager
+      - network-manager
+    state: present
+    update_cache: true
+  become: true
+  when: cellular_modem_enable_modem_manager
+  ignore_errors: "{{ ansible_check_mode }}"
+
+# Enable and start ModemManager service
+- name: "Cellular Modem | Enable ModemManager service"
+  ansible.builtin.systemd_service:
+    name: ModemManager
+    enabled: true
+    state: started
+  become: true
+  when: cellular_modem_enable_modem_manager
+  ignore_errors: "{{ ansible_check_mode }}"
+
+# Enable and start NetworkManager service
+- name: "Cellular Modem | Enable NetworkManager service"
+  ansible.builtin.systemd_service:
+    name: NetworkManager
+    enabled: true
+    state: started
+  become: true
+  when: cellular_modem_enable_network_manager
+  ignore_errors: "{{ ansible_check_mode }}"
+
+# Configure APN via NetworkManager if specified
+- name: "Cellular Modem | Configure APN settings"
+  when:
+    - cellular_modem_apn_configured
+    - cellular_modem_apn is defined
+  block:
+    - name: "Cellular Modem | Set APN via nmcli"
+      ansible.builtin.command:
+        cmd: >
+          nmcli connection modify "{{ cellular_modem_connection_name | default('Cellular') }}"
+          gsm.apn "{{ cellular_modem_apn }}"
+      become: true
+      changed_when: true
+      ignore_errors: "{{ ansible_check_mode }}"

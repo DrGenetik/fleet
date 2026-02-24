@@ -7,3 +7,4 @@
 - import_playbook: roles/reform/tests/test.yml  # noqa: name[play]
 - import_playbook: roles/amateur_radio/tests/test.yml  # noqa: name[play]
 - import_playbook: roles/umpc/tests/test.yml  # noqa: name[play]
+- import_playbook: roles/cellular_modem/tests/test.yml  # noqa: name[play]

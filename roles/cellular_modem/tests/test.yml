@@ -1,0 +1,11 @@
+---
+# Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
+
+- name: "Test Cellular Modem Role"
+  hosts: localhost
+  connection: local
+  gather_facts: true
+  tasks:
+    - name: "Include cellular_modem role"
+      ansible.builtin.include_role:
+        name: cellular_modem

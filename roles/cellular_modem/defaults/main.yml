@@ -1,0 +1,7 @@
+---
+# Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
+
+# Cellular modem configuration defaults
+cellular_modem_enable_modem_manager: true
+cellular_modem_enable_network_manager: true
+cellular_modem_apn_configured: false
