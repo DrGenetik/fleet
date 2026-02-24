@@ -1,0 +1,7 @@
+---
+# Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
+
+# uConsole hardware-specific configuration defaults
+uconsole_enable_audio: true
+uconsole_enable_buttons: true
+uconsole_enable_backlight: true

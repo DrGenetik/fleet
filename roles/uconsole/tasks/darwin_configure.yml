@@ -1,0 +1,8 @@
+---
+# Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
+
+# Darwin/macOS doesn't currently run on uConsole devices
+# This file is a placeholder for future expansion
+- name: "UConsole | macOS configuration"
+  ansible.builtin.debug:
+    msg: "uConsole role does not currently support macOS/Darwin"

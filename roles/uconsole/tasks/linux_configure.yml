@@ -1,0 +1,45 @@
+---
+# Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
+
+# Audio configuration for PCM5102 DAC (common on ClockworkPi devices)
+- name: "UConsole | Configure audio device settings"
+  become: true
+  ansible.builtin.copy:
+    dest: "/etc/modprobe.d/uconsole-audio.conf"
+    content: |
+      # uConsole Audio Configuration (PCM5102 DAC)
+      # Enable audio drivers for small form factor devices
+      options snd-usb-audio implicit_fb=1
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  ignore_errors: "{{ ansible_check_mode }}"
+
+# Keyboard mapping adjustments for hardware buttons
+- name: "UConsole | Configure hardware button mappings"
+  become: true
+  ansible.builtin.copy:
+    dest: "/etc/udev/rules.d/99-uconsole-buttons.rules"
+    content: |
+      # uConsole Hardware Button Configuration
+      # Maps GPIO buttons to keyboard events for game control
+      SUBSYSTEM=="input", ATTRS{name}=="gpio-keys", TAG="uaccess"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  ignore_errors: "{{ ansible_check_mode }}"
+
+# Screen brightness control via sysfs
+- name: "UConsole | Enable backlight control permissions"
+  become: true
+  ansible.builtin.copy:
+    dest: "/etc/udev/rules.d/99-uconsole-backlight.rules"
+    content: |
+      # uConsole Backlight Control
+      # Allow user to adjust screen brightness without root
+      SUBSYSTEM=="backlight", ACTION=="add", RUN+="/bin/chgrp video /sys/class/backlight/%k/brightness"
+      SUBSYSTEM=="backlight", ACTION=="add", RUN+="/bin/chmod g+w /sys/class/backlight/%k/brightness"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  ignore_errors: "{{ ansible_check_mode }}"

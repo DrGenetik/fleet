@@ -1,0 +1,11 @@
+---
+# Copyright (c) 2026 T.R. Fullhart. All Rights Reserved.
+
+- name: "Test uConsole Role"
+  hosts: localhost
+  connection: local
+  gather_facts: true
+  tasks:
+    - name: "Include uConsole role"
+      ansible.builtin.include_role:
+        name: uconsole

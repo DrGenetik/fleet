@@ -1,2 +1,3 @@
 roles_to_run:
   - umpc
+  - uconsole
