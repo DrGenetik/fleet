@@ -10,3 +10,4 @@
     rule: limit
     name: "{{ base_ufw_ssh_app_profile_name }}"
   become: true
+  ignore_errors: "{{ ansible_check_mode }}"

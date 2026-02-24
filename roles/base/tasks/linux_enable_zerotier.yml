@@ -4,6 +4,7 @@
     state: started
     enabled: true
   become: true
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: "Allow ZeroTier UDP port for direct P2P connections"
   community.general.ufw:
@@ -12,6 +13,7 @@
     proto: udp
     comment: "allow ZeroTier direct P2P connections"
   become: true
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: "Allow all incoming traffic from the ZeroTier virtual interface"
   community.general.ufw:
@@ -20,6 +22,7 @@
     interface: "{{ base_zerotier_interface }}"
     comment: "allow incoming from ZeroTier network"
   become: true
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: "System | Check if already in ZeroTier network"
   ansible.builtin.command:
@@ -28,13 +31,14 @@
   changed_when: false
   become: true
   check_mode: false
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: "System | Join ZeroTier Network"
   ansible.builtin.command:
     cmd: "zerotier-cli join {{ zerotier_network_id }}"
   become: true
   changed_when: false
-  when: "zerotier_network_id not in (base_zerotier_networks.stdout | from_json | map(attribute='nwid') | list)"
+  when: "base_zerotier_networks is not failed and zerotier_network_id not in (base_zerotier_networks.stdout | default('[]') | from_json | map(attribute='nwid') | list)"
 
 - name: "System | Setup ZeroTier hosts discovery"
   ansible.builtin.include_tasks: linux_zerotier_hosts.yml

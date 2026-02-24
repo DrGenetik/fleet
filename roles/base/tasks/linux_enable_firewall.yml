@@ -2,6 +2,7 @@
   community.general.ufw:
     state: enabled
   become: true
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: "Allow all required ports in UFW"
   community.general.ufw:
@@ -11,3 +12,4 @@
     comment: "{{ item.comment }}"
   loop: "{{ base_firewall_rules }}"
   become: true
+  ignore_errors: "{{ ansible_check_mode }}"
