@@ -40,3 +40,13 @@ run = "bd lint"
 [tasks.test]
 description = "Run tests for all roles (dry-run)"
 run = "ansible-playbook test_all.yml -i hosts -l localhost -c local --check -e \"zerotier_network_id=0000000000000000 github_token=dummytoken\""
+
+[tasks."secrets:set-become-pass"]
+description = "Set the ansible become password in 1Password for the current system"
+run = """
+#!/usr/bin/env bash
+read -s -p "Enter become password for $(hostname): " PASS
+echo
+op item edit "Fleet ansible become_pass" "add more.$(hostname)[concealed]=$PASS" --vault="ServiceAccountAccess" >/dev/null </dev/null
+echo "Password successfully set in 1Password for $(hostname)."
+"""
