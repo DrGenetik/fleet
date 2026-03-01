@@ -2,3 +2,5 @@ roles_to_run:
   - umpc
   - uconsole
   - cellular_modem
+  - nas_mount
+  - syncthing

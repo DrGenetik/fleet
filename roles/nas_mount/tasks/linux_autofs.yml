@@ -19,9 +19,9 @@
 
 - name: "NAS Mount | Linux | Create Mount Point Directory"
   ansible.builtin.file:
-    path: "{{ nas_mount_point }}"
+    path: "{{ nas_mount_point | ansible.builtin.dirname }}"
     state: directory
-    mode: '0755'
+    mode: "0755"
     owner: "{{ nas_mount_user }}"
     group: "{{ nas_mount_group }}"
   become: true
@@ -32,7 +32,7 @@
     dest: "{{ nas_mount_autofs_master_map }}"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   become: true
   notify: Restart autofs
 
@@ -42,7 +42,7 @@
     dest: "{{ nas_mount_autofs_map_file }}"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   become: true
   notify: Restart autofs
 
@@ -50,7 +50,7 @@
   ansible.builtin.file:
     path: /etc/systemd/system/autofs.service.d
     state: directory
-    mode: '0755'
+    mode: "0755"
     owner: root
     group: root
   become: true
@@ -62,7 +62,7 @@
       [Unit]
       After=zerotier-one.service
       Wants=zerotier-one.service
-    mode: '0644'
+    mode: "0644"
     owner: root
     group: root
   become: true
